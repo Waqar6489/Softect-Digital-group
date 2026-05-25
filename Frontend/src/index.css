@@ -1,0 +1,356 @@
+@import "tailwindcss";
+
+/* ── Base font (Inter everywhere, consistent size) ─────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1e293b;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.2;
+}
+
+p,
+span,
+li,
+a,
+button,
+input,
+select,
+textarea {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Cursor: pointer on all interactive elements ─────────────────────── */
+a,
+button,
+[role="button"],
+[onclick],
+select,
+label[for],
+summary,
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* ── Scroll-reveal animation (IntersectionObserver driven) ──────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+}
+
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s cubic-bezier(.22, 1, .36, 1), transform 0.6s cubic-bezier(.22, 1, .36, 1);
+}
+
+.reveal-scale.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger children */
+.reveal-stagger>*:nth-child(1) {
+  transition-delay: 0.05s;
+}
+
+.reveal-stagger>*:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.reveal-stagger>*:nth-child(3) {
+  transition-delay: 0.19s;
+}
+
+.reveal-stagger>*:nth-child(4) {
+  transition-delay: 0.26s;
+}
+
+.reveal-stagger>*:nth-child(5) {
+  transition-delay: 0.33s;
+}
+
+.reveal-stagger>*:nth-child(6) {
+  transition-delay: 0.40s;
+}
+
+.reveal-stagger>*:nth-child(7) {
+  transition-delay: 0.47s;
+}
+
+.reveal-stagger>*:nth-child(8) {
+  transition-delay: 0.54s;
+}
+
+/* ── Page entrance animations ───────────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes floatY {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(164, 66, 175, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px rgba(164, 66, 175, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(164, 66, 175, 0);
+  }
+}
+
+@keyframes shimmerMove {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Utility classes */
+.animate-fade-up {
+  animation: fadeUp 0.55s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease both;
+}
+
+.animate-slide-right {
+  animation: slideRight 0.55s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.animate-float {
+  animation: floatY 4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2.5s infinite;
+}
+
+/* Stagger delays */
+.delay-100 {
+  animation-delay: 0.10s;
+}
+
+.delay-200 {
+  animation-delay: 0.20s;
+}
+
+.delay-300 {
+  animation-delay: 0.30s;
+}
+
+.delay-400 {
+  animation-delay: 0.40s;
+}
+
+.delay-500 {
+  animation-delay: 0.50s;
+}
+
+.delay-600 {
+  animation-delay: 0.60s;
+}
+
+.delay-700 {
+  animation-delay: 0.70s;
+}
+
+/* ── Gradient animated text ─────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #a442af, #122a52, #a442af);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+}
+
+/* ── Card hover lift ────────────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.3s cubic-bezier(.22, 1, .36, 1), box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -10px rgba(18, 42, 82, 0.15);
+}
+
+/* ── Shimmer skeleton ───────────────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.5s infinite;
+}
+
+/* ── FAQ accordion ──────────────────────────────────────────────────────── */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(.22, 1, .36, 1), padding 0.3s ease;
+}
+
+.faq-answer.open {
+  max-height: 400px;
+}
+
+/* ── Review card ────────────────────────────────────────────────────────── */
+.review-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px -8px rgba(164, 66, 175, 0.2);
+}
+
+/* ── Tech stack badge ───────────────────────────────────────────────────── */
+.tech-badge {
+  transition: all 0.25s ease;
+}
+
+.tech-badge:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px -4px rgba(164, 66, 175, 0.3);
+}
+
+/* ── Smooth page transitions ────────────────────────────────────────────── */
+.page-enter {
+  animation: fadeUp 0.4s cubic-bezier(.22, 1, .36, 1) both;
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "timestamp": "2026-05-25T10:30:01.378486",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "Softech Digital Group | UK",
+    "service": "Web Development",
+    "budget": "$5,000 \u2013 $15,000",
+    "timeline": "1 \u2013 3 Months",
+    "description": "testing"
+  },
+  {
+    "timestamp": "2026-05-25T12:35:04.209971",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "Softech Digital Group | UK",
+    "service": "UI/UX Design",
+    "budget": "$15,000 \u2013 $50,000",
+    "timeline": "3 \u2013 6 Months",
+    "description": ""
+  }
+]
