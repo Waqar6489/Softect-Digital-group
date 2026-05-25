@@ -1,40 +1,46 @@
 import React from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Header from './Components/Headers/Header'
-import Home from "./Components/Pages/Home/Home";
+import { Footer } from './Components/Footer'
+import ScrollToTop from './Components/ScrollToTop'
+import './index.css'
+
+import Home from "./Components/Pages/Home/Home"
 import Services from './Components/Pages/Services'
 import { Solutions } from './Components/Pages/Solutions'
 import { Company } from './Components/Pages/Company'
 import { Works } from './Components/Pages/Works'
 import { Career } from './Components/Pages/Career'
-import { Contact } from './Components/Pages/Contact';
+import { Contact } from './Components/Pages/Contact'
 import { GetaQuote } from './Components/Pages/GetaQuote'
 import { ErrorPage } from './Components/Pages/404ErrorPage'
-import { PrivacyPolicy } from './Components/Pages/PrivacyPolicy';
-import { ReturnPolicy } from './Components/Pages/ReturnPolicy';
-import { TermAndCondition } from './Components/Pages/TermAndCondition';
-import { WebDevelopment } from './Components/Pages/Services_pages/WebDevelopment';
-import './index.css'
-import { Routes, Route } from 'react-router-dom'
-import { Footer } from './Components/Footer';
-import { GameDevelopment } from './Components/Pages/Services_pages/GameDevelopment';
-import { MobileDevelopment } from './Components/Pages/Services_pages/MobileDevelopment';
-import { SoftwareDevelopment } from './Components/Pages/Services_pages/SoftwareDevelopment';
-import { Ecommerce } from './Components/Pages/Services_pages/Ecommerce';
-import { ProductDevelopment } from './Components/Pages/Services_pages/ProductDevelopment';
-import { BlockAppDevelopment } from './Components/Pages/Services_pages/BlockchainAppDevelopment';
-import { CrossPlatformAppDevelopment } from './Components/Pages/Services_pages/CrossPlatformAppDevelopment';
-import { EmergingAppDevelopment } from './Components/Pages/Services_pages/EmergingAppDevelopment';
-import { ArtificialIntelligence } from './Components/Pages/Services_pages/ArtificialIntelligence';
-import { XDRM } from './Components/Pages/Solutions_pages/XDRM';
-import { HRM } from './Components/Pages/Solutions_pages/HRM';
-import { Blog } from './Components/Pages/Blog';
-import ScrollToTop from './Components/ScrollToTop';
+import { PrivacyPolicy } from './Components/Pages/PrivacyPolicy'
+import { ReturnPolicy } from './Components/Pages/ReturnPolicy'
+import { TermAndCondition } from './Components/Pages/TermAndCondition'
+import { WebDevelopment } from './Components/Pages/Services_pages/WebDevelopment'
+import { GameDevelopment } from './Components/Pages/Services_pages/GameDevelopment'
+import { MobileDevelopment } from './Components/Pages/Services_pages/MobileDevelopment'
+import { SoftwareDevelopment } from './Components/Pages/Services_pages/SoftwareDevelopment'
+import { Ecommerce } from './Components/Pages/Services_pages/Ecommerce'
+import { ProductDevelopment } from './Components/Pages/Services_pages/ProductDevelopment'
+import { BlockAppDevelopment } from './Components/Pages/Services_pages/BlockchainAppDevelopment'
+import { CrossPlatformAppDevelopment } from './Components/Pages/Services_pages/CrossPlatformAppDevelopment'
+import { EmergingAppDevelopment } from './Components/Pages/Services_pages/EmergingAppDevelopment'
+import { ArtificialIntelligence } from './Components/Pages/Services_pages/ArtificialIntelligence'
+import { XDRM } from './Components/Pages/Solutions_pages/XDRM'
+import { HRM } from './Components/Pages/Solutions_pages/HRM'
+import { Blog } from './Components/Pages/Blog'
+import { BlogPost } from './Components/Pages/BlogPost'
+import { BlogAdmin } from './Components/Pages/BlogAdmin'
 
 function App() {
+  const { pathname } = useLocation();
+  const isAdmin = pathname === '/blog-admin';
+
   return (
     <div className="App">
       <ScrollToTop />
-      <Header />
+      {!isAdmin && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -62,9 +68,11 @@ function App() {
         <Route path='/refund-return-policy' element={<ReturnPolicy />} />
         <Route path='/terms-and-conditions' element={<TermAndCondition />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      <Footer />
+      {!isAdmin && <Footer />}
     </div>
   )
 }

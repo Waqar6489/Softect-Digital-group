@@ -1,22 +1,4 @@
 from flask import Flask, request, jsonify, send_from_directory
-try:
-    from flask_cors import CORS  # type: ignore
-except Exception:
-    # Minimal fallback if flask_cors isn't installed: add permissive CORS for /api/*
-    def CORS(app, resources=None):
-        @app.after_request
-        def _cors_response(response):
-            # Only apply to API routes if resources specified as {r"/api/*": {...}}
-            try:
-                path = getattr(request, 'path', '')
-            except Exception:
-                path = ''
-            if not resources or any(r.startswith('/api') for r in resources):
-                if path.startswith('/api/') or path == '/api' or resources is None:
-                    response.headers['Access-Control-Allow-Origin'] = '*'
-                    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
-                    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
-            return response
 import json
 import os
 import smtplib
@@ -25,7 +7,14 @@ from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 
 app = Flask(__name__, static_folder='../Frontend/dist', static_url_path='')
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+@app.after_request
+def add_cors_headers(response):
+    if request.path.startswith('/api/'):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 # ─── Data storage (file-based, replace with DB in production) ────────────────
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
@@ -202,7 +191,7 @@ def _send_notification_email(subject, body):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_user = os.getenv('SMTP_USER')
     smtp_pass = os.getenv('SMTP_PASS')
-    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaralioficial@gmail.com')
+    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaraliofi@gmail.com')
 
     if not (smtp_host and smtp_user and smtp_pass):
         return  # Email not configured – skip silently
