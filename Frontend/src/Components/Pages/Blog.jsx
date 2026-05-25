@@ -329,12 +329,22 @@ export const Blog = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || '';
-    fetch(`${API}/api/blogs`)
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => { if (Array.isArray(data) && data.length > 0) setPosts(data); })
-      .catch(() => { });
-  }, []);
+  const API = import.meta.env.VITE_API_URL || '';
+  fetch(`${API}/api/blogs`)
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        // Merge API posts with fallback — API posts come first
+        const apiSlugs = data.map(p => p.slug);
+        const filtered = FALLBACK_POSTS.filter(p => !apiSlugs.includes(p.slug));
+        setPosts([...data, ...filtered]);
+      }
+    })
+    .catch(() => {
+      // Backend not reachable, use fallback only
+      setPosts(FALLBACK_POSTS);
+    });
+}, []);
 
   const filtered = posts.filter(p => {
     const matchCat = activeCategory === "All" || p.category === activeCategory;

@@ -213,8 +213,18 @@ def _send_notification_email(subject, body):
 # ─── Blog endpoints ───────────────────────────────────────────────────────────
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
-    """Return all published blog posts (for admin, filter by published=True)."""
-    return _read_data('blogs.json')
+    """Return all published blog posts."""
+    filepath = os.path.join(DATA_DIR, 'blogs.json')
+    if not os.path.exists(filepath):
+        return jsonify([])  # Frontend will merge with its own fallback posts
+    with open(filepath) as f:
+        try:
+            posts = json.load(f)
+        except Exception:
+            return jsonify([])
+    # Only return published posts to public
+    published = [p for p in posts if p.get('published', True)]
+    return jsonify(published)
 
 @app.route('/api/blogs/<slug>', methods=['GET'])
 def get_blog(slug):
