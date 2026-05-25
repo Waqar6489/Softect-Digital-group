@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 import json
 import os
 import smtplib
@@ -7,14 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 
 app = Flask(__name__, static_folder='../Frontend/dist', static_url_path='')
-
-@app.after_request
-def add_cors_headers(response):
-    if request.path.startswith('/api/'):
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-    return response
+CORS(app, origins="*", allow_headers=["Content-Type", "X-Admin-Key"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
 # ─── Data storage (file-based, replace with DB in production) ────────────────
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
@@ -191,7 +185,7 @@ def _send_notification_email(subject, body):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_user = os.getenv('SMTP_USER')
     smtp_pass = os.getenv('SMTP_PASS')
-    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaraliofi@gmail.com')
+    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaralioficial@gmail.com')
 
     if not (smtp_host and smtp_user and smtp_pass):
         return  # Email not configured – skip silently
@@ -244,7 +238,7 @@ def create_blog():
     Body: { title, slug, excerpt, content, category, author, image, published }
     Secure this with an API key in production: check request.headers.get('X-Admin-Key').
     """
-    admin_key = os.getenv('ADMIN_KEY', 'adminsecretkey123')
+    admin_key = os.getenv('ADMIN_KEY', '')
     if admin_key and request.headers.get('X-Admin-Key') != admin_key:
         return jsonify({'error': 'Unauthorized'}), 401
 
@@ -274,7 +268,7 @@ def create_blog():
 
 @app.route('/api/blogs/<slug>', methods=['PUT'])
 def update_blog(slug):
-    admin_key = os.getenv('ADMIN_KEY', 'adminsecretkey123')
+    admin_key = os.getenv('ADMIN_KEY', '')
     if admin_key and request.headers.get('X-Admin-Key') != admin_key:
         return jsonify({'error': 'Unauthorized'}), 401
 
@@ -302,7 +296,7 @@ def update_blog(slug):
 
 @app.route('/api/blogs/<slug>', methods=['DELETE'])
 def delete_blog(slug):
-    admin_key = os.getenv('ADMIN_KEY', 'adminsecretkey123')
+    admin_key = os.getenv('ADMIN_KEY', '')
     if admin_key and request.headers.get('X-Admin-Key') != admin_key:
         return jsonify({'error': 'Unauthorized'}), 401
 
