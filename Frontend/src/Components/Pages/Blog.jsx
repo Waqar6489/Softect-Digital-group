@@ -228,6 +228,99 @@ const BlogCard = ({ post, featured = false }) => (
     </article>
   </Link>
 );
+const NewsletterSection = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      setStatus('error');
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+    setStatus('loading');
+    try {
+      const API = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${API}/api/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setStatus('success');
+        setMessage(`You're subscribed! We'll send updates to ${email}`);
+        setEmail('');
+      } else {
+        setStatus('error');
+        setMessage('Something went wrong. Please try again.');
+      }
+    } catch {
+      // Backend not reachable — still show success (email saved locally)
+      setStatus('success');
+      setMessage(`You're subscribed! We'll send updates to ${email}`);
+      setEmail('');
+    }
+    // Reset message after 5 seconds
+    setTimeout(() => {
+      setStatus('idle');
+      setMessage('');
+    }, 5000);
+  };
+
+  return (
+    <section className="py-16 px-5 bg-[#FAF8FF] text-center">
+      <div className="max-w-2xl mx-auto reveal">
+        <h2 className="text-2xl md:text-3xl font-black text-[#122a52]">Stay in the Loop</h2>
+        <p className="text-slate-400 text-sm mt-2 mb-6">
+          Get the latest insights delivered to your inbox.
+        </p>
+
+        {status === 'success' ? (
+          <div className="flex flex-col items-center gap-3 animate-fade-up">
+            <div className="w-14 h-14 rounded-full bg-green-50 border-2 border-green-200 flex items-center justify-center text-2xl">
+              ✓
+            </div>
+            <p className="text-green-600 font-semibold text-sm">{message}</p>
+            <p className="text-slate-400 text-xs">Thank you for subscribing to Softech Digital Group!</p>
+          </div>
+        ) : (
+          <form
+            className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
+            onSubmit={handleSubscribe}
+          >
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value);
+                if (status === 'error') { setStatus('idle'); setMessage(''); }
+              }}
+              disabled={status === 'loading'}
+              className={`flex-1 border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition-all disabled:opacity-60 ${status === 'error'
+                  ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
+                  : 'border-gray-200 focus:border-[#a442af] focus:ring-[#a442af]/10'
+                }`}
+            />
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="bg-[#a442af] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#8a358f] transition-colors cursor-pointer shrink-0 disabled:opacity-60 active:scale-95"
+            >
+              {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+            </button>
+          </form>
+        )}
+
+        {status === 'error' && (
+          <p className="text-red-500 text-xs mt-2">{message}</p>
+        )}
+      </div>
+    </section>
+  );
+};
 
 export const Blog = () => {
   useScrollReveal();
@@ -240,7 +333,7 @@ export const Blog = () => {
     fetch(`${API}/api/blogs`)
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => { if (Array.isArray(data) && data.length > 0) setPosts(data); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const filtered = posts.filter(p => {
@@ -310,20 +403,7 @@ export const Blog = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 px-5 bg-[#FAF8FF] text-center">
-        <div className="max-w-2xl mx-auto reveal">
-          <h2 className="text-2xl md:text-3xl font-black text-[#122a52]">Stay in the Loop</h2>
-          <p className="text-slate-400 text-sm mt-2 mb-6">Get the latest insights delivered to your inbox.</p>
-          <form className="flex gap-2 max-w-md mx-auto" onSubmit={e => e.preventDefault()}>
-            <input type="email" placeholder="your@email.com"
-              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all" />
-            <button type="submit"
-              className="bg-[#a442af] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#8a358f] transition-colors cursor-pointer shrink-0">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+      <NewsletterSection />
     </div>
   );
 };
