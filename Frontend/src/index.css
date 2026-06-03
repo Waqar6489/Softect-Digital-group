@@ -55,45 +55,37 @@ summary,
 .reveal {
   opacity: 0;
   transform: translateY(32px);
-  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+  transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
 }
-
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(10px);
 }
-
 .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
-  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+  transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
 }
-
-.reveal-left.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
 .reveal-right {
   opacity: 0;
   transform: translateX(40px);
-  transition: opacity 0.65s cubic-bezier(.22, 1, .36, 1), transform 0.65s cubic-bezier(.22, 1, .36, 1);
+  transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
 }
-
-.reveal-right.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
 .reveal-scale {
   opacity: 0;
   transform: scale(0.9);
-  transition: opacity 0.6s cubic-bezier(.22, 1, .36, 1), transform 0.6s cubic-bezier(.22, 1, .36, 1);
+  transition: opacity 0.6s cubic-bezier(.22,1,.36,1), transform 0.6s cubic-bezier(.22,1,.36,1);
 }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
 
-.reveal-scale.visible {
-  opacity: 1;
-  transform: scale(1);
+/* ── Elements inside FAQ, cards, accordions are always visible ── */
+.fqa-reveal {
+
+  transform: translateY(30px);
+   transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
+
 }
 
 /* Stagger children */

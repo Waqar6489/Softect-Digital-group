@@ -18,7 +18,8 @@ export const Contact = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/contact', {
+      const API = import.meta.env.VITE_API_URL || '';
+      const res = await fetch(`${API}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -30,8 +31,7 @@ export const Contact = () => {
         setError('Something went wrong. Please try again or email us directly.');
       }
     } catch {
-      // In development or when backend not available, just show success
-      setSubmitted(true);
+      setError('Unable to connect. Please email us at info@softechdigitalgroup.com');
     }
     setLoading(false);
   };
@@ -55,7 +55,6 @@ export const Contact = () => {
           <div className="flex flex-col gap-8 reveal-left">
             <div>
               <h2 className="text-2xl font-black text-[#122a52] mb-6">Get In Touch</h2>
-
               <div className="flex flex-col gap-5">
                 <div className="flex items-start gap-4 p-4 bg-[#fdf9ff] rounded-xl border border-purple-100">
                   <div className="text-[#a442af] mt-1 text-xl"><MdEmail /></div>
@@ -115,7 +114,7 @@ export const Contact = () => {
                 <h3 className="text-2xl font-black text-[#122a52]">Message Sent!</h3>
                 <p className="text-slate-500 text-sm max-w-sm">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
                 <button onClick={() => setSubmitted(false)}
-                  className="px-6 py-2.5 bg-[#a442af] text-white rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors">
+                  className="px-6 py-2.5 bg-[#a442af] text-white rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors cursor-pointer">
                   Send Another Message
                 </button>
               </div>
@@ -145,7 +144,7 @@ export const Contact = () => {
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Service Interested In</label>
                     <select name="service" value={form.service} onChange={handleChange}
-                      className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all text-slate-600 bg-white">
+                      className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all text-slate-600 bg-white cursor-pointer">
                       <option value="">Select a service...</option>
                       <option>Web Development</option>
                       <option>Mobile App Development</option>
@@ -167,11 +166,22 @@ export const Contact = () => {
                     className="border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all resize-none" />
                 </div>
 
-                {error && <p className="text-red-500 text-xs">{error}</p>}
+                {error && (
+                  <p className="text-red-500 text-xs bg-red-50 px-4 py-3 rounded-lg border border-red-100">
+                    {error}
+                  </p>
+                )}
 
                 <button type="submit" disabled={loading}
-                  className="flex items-center justify-center gap-2 w-full bg-[#a442af] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors active:scale-95 disabled:opacity-60">
-                  {loading ? "Sending..." : <>Send Message <FaLongArrowAltRight /></>}
+                  className="flex items-center justify-center gap-2 w-full bg-[#a442af] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors active:scale-95 disabled:opacity-60 cursor-pointer">
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>Send Message <FaLongArrowAltRight /></>
+                  )}
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center">We respect your privacy and never share your information.</p>

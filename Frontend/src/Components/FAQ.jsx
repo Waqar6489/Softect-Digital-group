@@ -23,7 +23,7 @@ const FAQ = ({ title = "Frequently Asked Questions", items = [] }) => {
           {items.map((item, i) => (
             <div
               key={i}
-              className={`reveal border rounded-2xl overflow-hidden bg-white transition-all duration-300 cursor-pointer ${
+              className={` fqa-reveal border rounded-2xl overflow-hidden bg-white transition-all duration-300 cursor-pointer ${
                 open === i ? 'border-[#a442af] shadow-md shadow-[#a442af]/10' : 'border-gray-100 hover:border-[#a442af]/40'
               }`}
               onClick={() => setOpen(open === i ? null : i)}

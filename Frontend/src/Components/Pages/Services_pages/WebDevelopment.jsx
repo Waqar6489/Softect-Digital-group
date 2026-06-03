@@ -52,11 +52,11 @@ export const WebDevelopment = () => {
   useScrollReveal();
 
   return (
-    <div className="w-full page-enter">
+    <div className="w-full ">
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <section className="w-full flex md:flex-row flex-col items-center gap-10 bg-gradient-to-b from-[#fdf9ff] to-white lg:p-15 sm:px-6 md:p-5 md:py-16 overflow-hidden">
-        <div className="w-full md:w-1/2 p-7 flex flex-col gap-6 reveal-left">
+        <div className="w-full md:w-1/2 p-7 flex flex-col gap-6 ">
           <span className="text-xs font-bold text-[#a442af] uppercase tracking-widest border-l-2 border-[#a442af] pl-3">Web Development</span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#122a52] leading-tight">
             We Don't Just Build Websites —<br />
@@ -78,15 +78,15 @@ export const WebDevelopment = () => {
             </Link>
           </div>
         </div>
-        <div className="w-full md:w-1/2 p-8 reveal-right">
+        <div className="w-full md:w-1/2 p-8 ">
           <img src={webdev} alt="web development" className="object-cover w-full h-auto rounded-2xl" />
         </div>
       </section>
 
       {/* ── STATS ────────────────────────────────────────────────────────── */}
       <section className="py-14 px-5 lg:px-20 bg-[#FAF8FF]">
-        <h2 className="text-3xl font-black text-[#122a52] text-center mb-10 reveal">Quick Stats</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto reveal-stagger">
+        <h2 className="text-3xl font-black text-[#122a52] text-center mb-10">Quick Stats</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 max-w-6xl mx-auto reveal-stagger">
           {[
             { icon: <MdRocketLaunch className="text-3xl" />, stat: "200+", label: "Websites Delivered" },
             { icon: <RiGlobalFill className="text-3xl" />, stat: "20+", label: "Global Clients" },
@@ -94,7 +94,7 @@ export const WebDevelopment = () => {
           ].map((s, i) => (
             <div key={i} className="reveal bg-white rounded-2xl p-8 flex flex-col items-center gap-3 shadow-sm border border-purple-50 hover:border-[#a442af]/30 transition-all card-hover">
               <span className="text-[#a442af]">{s.icon}</span>
-              <span className="text-4xl font-black text-[#122a52]">{s.stat}</span>
+              <span className="text-3xl font-black text-[#122a52]">{s.stat}</span>
               <span className="text-sm text-slate-400 font-medium">{s.label}</span>
             </div>
           ))}
@@ -107,7 +107,7 @@ export const WebDevelopment = () => {
           <div className="text-center mb-12 reveal">
             <h2 className="text-3xl font-black text-[#122a52]">Why Choose Our <span className="text-[#a442af]">Web Studio</span></h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 reveal-stagger">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 reveal-stagger">
             {highlights.map((h, i) => (
               <div key={i} className="reveal bg-[#fdf9ff] border border-purple-50 rounded-2xl p-6 flex flex-col gap-3 card-hover">
                 <span className="text-3xl text-[#a442af]">{h.icon}</span>

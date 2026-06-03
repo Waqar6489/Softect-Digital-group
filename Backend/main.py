@@ -6,11 +6,19 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__, static_folder='../Frontend/dist', static_url_path='')
-CORS(app, origins="*", allow_headers=["Content-Type", "X-Admin-Key"], methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+CORS(
+    app,
+    origins="*",
+    allow_headers=["Content-Type", "X-Admin-Key"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
-# ─── Data storage (file-based, replace with DB in production) ────────────────
+# ─── Data storage ─────────────────────────────────────────────────────────────
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -27,6 +35,19 @@ def save_submission(filename, data):
     with open(filepath, 'w') as f:
         json.dump(submissions, f, indent=2)
 
+def _read_data(filename):
+    filepath = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(filepath):
+        return jsonify([])
+    with open(filepath, 'r') as f:
+        return jsonify(json.load(f))
+
+def _check_admin():
+    admin_key = os.getenv('ADMIN_KEY', '')
+    if admin_key and request.headers.get('X-Admin-Key') != admin_key:
+        return False
+    return True
+
 # ─── Health check ─────────────────────────────────────────────────────────────
 @app.route('/api/health')
 def health():
@@ -36,8 +57,7 @@ def health():
 @app.route('/api/contact', methods=['POST'])
 def contact():
     data = request.get_json(force=True)
-    required = ['name', 'email', 'message']
-    for field in required:
+    for field in ['name', 'email', 'message']:
         if not data.get(field):
             return jsonify({'error': f'Missing required field: {field}'}), 400
 
@@ -50,30 +70,17 @@ def contact():
         'message': data.get('message', '').strip(),
     }
     save_submission('contacts.json', submission)
-
-    # Optional: Send notification email (configure SMTP env vars)
     _send_notification_email(
         subject=f"[Softech] New Contact: {submission['name']}",
-        body=f"""New contact form submission:
-
-Name: {submission['name']}
-Email: {submission['email']}
-Phone: {submission['phone']}
-Service: {submission['service']}
-
-Message:
-{submission['message']}
-"""
+        body=f"Name: {submission['name']}\nEmail: {submission['email']}\nPhone: {submission['phone']}\nService: {submission['service']}\n\nMessage:\n{submission['message']}"
     )
-
     return jsonify({'success': True, 'message': 'Thank you! We will be in touch within 24 hours.'}), 200
 
 # ─── Quote request ────────────────────────────────────────────────────────────
 @app.route('/api/quote', methods=['POST'])
 def quote():
     data = request.get_json(force=True)
-    required = ['name', 'email']
-    for field in required:
+    for field in ['name', 'email']:
         if not data.get(field):
             return jsonify({'error': f'Missing required field: {field}'}), 400
 
@@ -89,33 +96,17 @@ def quote():
         'description': data.get('description', '').strip(),
     }
     save_submission('quotes.json', submission)
-
     _send_notification_email(
-        subject=f"[Softech] New Quote Request: {submission['name']} – {submission['service']}",
-        body=f"""New quote request:
-
-Name: {submission['name']}
-Email: {submission['email']}
-Phone: {submission['phone']}
-Company: {submission['company']}
-
-Service: {submission['service']}
-Budget: {submission['budget']}
-Timeline: {submission['timeline']}
-
-Project Description:
-{submission['description']}
-"""
+        subject=f"[Softech] New Quote: {submission['name']} – {submission['service']}",
+        body=f"Name: {submission['name']}\nEmail: {submission['email']}\nService: {submission['service']}\nBudget: {submission['budget']}\nTimeline: {submission['timeline']}\n\n{submission['description']}"
     )
-
     return jsonify({'success': True, 'message': 'Quote request received. Proposal incoming within 24–48 hours.'}), 200
 
-# ─── Career / job application ─────────────────────────────────────────────────
+# ─── Job application ──────────────────────────────────────────────────────────
 @app.route('/api/apply', methods=['POST'])
 def apply():
     data = request.get_json(force=True)
-    required = ['name', 'email', 'position']
-    for field in required:
+    for field in ['name', 'email', 'position']:
         if not data.get(field):
             return jsonify({'error': f'Missing required field: {field}'}), 400
 
@@ -130,93 +121,52 @@ def apply():
         'cover': data.get('cover', '').strip(),
     }
     save_submission('applications.json', submission)
-
     _send_notification_email(
         subject=f"[Softech] Job Application: {submission['position']} – {submission['name']}",
-        body=f"""New job application:
-
-Position: {submission['position']}
-Name: {submission['name']}
-Email: {submission['email']}
-Phone: {submission['phone']}
-LinkedIn: {submission['linkedin']}
-Portfolio: {submission['portfolio']}
-
-Cover Letter:
-{submission['cover']}
-"""
+        body=f"Position: {submission['position']}\nName: {submission['name']}\nEmail: {submission['email']}\nLinkedIn: {submission['linkedin']}\n\n{submission['cover']}"
     )
-
     return jsonify({'success': True, 'message': 'Application received! We will review and get back to you soon.'}), 200
 
-# ─── Newsletter subscribe ─────────────────────────────────────────────────────
+# ─── Newsletter ───────────────────────────────────────────────────────────────
 @app.route('/api/subscribe', methods=['POST'])
 def subscribe():
     data = request.get_json(force=True)
     email = data.get('email', '').strip()
     if not email or '@' not in email:
         return jsonify({'error': 'Valid email required'}), 400
-    submission = {'timestamp': datetime.utcnow().isoformat(), 'email': email}
-    save_submission('subscribers.json', submission)
+    save_submission('subscribers.json', {'timestamp': datetime.utcnow().isoformat(), 'email': email})
     return jsonify({'success': True, 'message': 'Subscribed successfully!'}), 200
 
-# ─── Admin endpoints (basic, protect in production) ───────────────────────────
+# ─── Admin endpoints ──────────────────────────────────────────────────────────
 @app.route('/api/admin/contacts')
 def admin_contacts():
+    if not _check_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
     return _read_data('contacts.json')
 
 @app.route('/api/admin/quotes')
 def admin_quotes():
+    if not _check_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
     return _read_data('quotes.json')
 
 @app.route('/api/admin/applications')
 def admin_applications():
+    if not _check_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
     return _read_data('applications.json')
-
-def _read_data(filename):
-    filepath = os.path.join(DATA_DIR, filename)
-    if not os.path.exists(filepath):
-        return jsonify([])
-    with open(filepath, 'r') as f:
-        return jsonify(json.load(f))
-
-# ─── Email helper (optional – set SMTP env vars to enable) ────────────────────
-def _send_notification_email(subject, body):
-    smtp_host = os.getenv('SMTP_HOST')
-    smtp_user = os.getenv('SMTP_USER')
-    smtp_pass = os.getenv('SMTP_PASS')
-    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaralioficial@gmail.com')
-
-    if not (smtp_host and smtp_user and smtp_pass):
-        return  # Email not configured – skip silently
-
-    try:
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = notify_to
-        msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
-
-        with smtplib.SMTP_SSL(smtp_host, 465) as server:
-            server.login(smtp_user, smtp_pass)
-            server.sendmail(smtp_user, notify_to, msg.as_string())
-    except Exception as e:
-        print(f"Email send failed: {e}")
-
 
 # ─── Blog endpoints ───────────────────────────────────────────────────────────
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
-    """Return all published blog posts."""
     filepath = os.path.join(DATA_DIR, 'blogs.json')
     if not os.path.exists(filepath):
-        return jsonify([])  # Frontend will merge with its own fallback posts
+        return jsonify([])
     with open(filepath) as f:
         try:
             posts = json.load(f)
         except Exception:
             return jsonify([])
-    # Only return published posts to public
     published = [p for p in posts if p.get('published', True)]
     return jsonify(published)
 
@@ -234,20 +184,12 @@ def get_blog(slug):
 
 @app.route('/api/blogs', methods=['POST'])
 def create_blog():
-    """Admin: create a new blog post. 
-    Body: { title, slug, excerpt, content, category, author, image, published }
-    Secure this with an API key in production: check request.headers.get('X-Admin-Key').
-    """
-    admin_key = os.getenv('ADMIN_KEY', '')
-    if admin_key and request.headers.get('X-Admin-Key') != admin_key:
+    if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-
     data = request.get_json(force=True)
-    required = ['title', 'slug', 'excerpt', 'content']
-    for field in required:
+    for field in ['title', 'slug', 'excerpt', 'content']:
         if not data.get(field):
             return jsonify({'error': f'Missing: {field}'}), 400
-
     post = {
         'id': int(datetime.utcnow().timestamp()),
         'slug': data['slug'],
@@ -268,55 +210,65 @@ def create_blog():
 
 @app.route('/api/blogs/<slug>', methods=['PUT'])
 def update_blog(slug):
-    admin_key = os.getenv('ADMIN_KEY', '')
-    if admin_key and request.headers.get('X-Admin-Key') != admin_key:
+    if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-
     data = request.get_json(force=True)
     filepath = os.path.join(DATA_DIR, 'blogs.json')
     if not os.path.exists(filepath):
         return jsonify({'error': 'Not found'}), 404
-
     with open(filepath) as f:
         posts = json.load(f)
-
     updated = False
     for i, p in enumerate(posts):
         if p.get('slug') == slug:
             posts[i] = {**p, **data, 'updated_at': datetime.utcnow().isoformat()}
             updated = True
             break
-
     if not updated:
         return jsonify({'error': 'Post not found'}), 404
-
     with open(filepath, 'w') as f:
         json.dump(posts, f, indent=2)
     return jsonify({'success': True})
 
 @app.route('/api/blogs/<slug>', methods=['DELETE'])
 def delete_blog(slug):
-    admin_key = os.getenv('ADMIN_KEY', '')
-    if admin_key and request.headers.get('X-Admin-Key') != admin_key:
+    if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-
     filepath = os.path.join(DATA_DIR, 'blogs.json')
     if not os.path.exists(filepath):
         return jsonify({'error': 'Not found'}), 404
-
     with open(filepath) as f:
         posts = json.load(f)
-
     posts = [p for p in posts if p.get('slug') != slug]
     with open(filepath, 'w') as f:
         json.dump(posts, f, indent=2)
     return jsonify({'success': True})
 
-# ─── Serve React SPA (production) ─────────────────────────────────────────────
+# ─── Email helper ─────────────────────────────────────────────────────────────
+def _send_notification_email(subject, body):
+    smtp_host = os.getenv('SMTP_HOST')
+    smtp_user = os.getenv('SMTP_USER')
+    smtp_pass = os.getenv('SMTP_PASS')
+    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaralioficial@gmail.com')
+    if not (smtp_host and smtp_user and smtp_pass):
+        return
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = smtp_user
+        msg['To'] = notify_to
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+        with smtplib.SMTP_SSL(smtp_host, 465) as server:
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(smtp_user, notify_to, msg.as_string())
+    except Exception as e:
+        print(f"Email send failed: {e}")
+
+# ─── Serve React SPA ──────────────────────────────────────────────────────────
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_react(path):
-    dist = os.path.join(app.static_folder)
+    dist = app.static_folder
     if path and os.path.exists(os.path.join(dist, path)):
         return send_from_directory(dist, path)
     return send_from_directory(dist, 'index.html')
