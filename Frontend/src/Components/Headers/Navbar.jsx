@@ -29,7 +29,7 @@ const companyMenu = [
 
 const DropdownMenu = ({ items, isOpen }) => (
   <div
-    className={`absolute top-full left-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden z-50 min-w-[220px] transition-all duration-300 origin-top ${
+    className={`absolute top-full left-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden z-50 min-w-[220px] transition-all duration-500 origin-top ${
       isOpen ? "opacity-100 scale-y-100 pointer-events-auto" : "opacity-0 scale-y-95 pointer-events-none"
     }`}
     style={{ transformOrigin: "top" }}
