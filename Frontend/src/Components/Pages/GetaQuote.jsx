@@ -9,6 +9,7 @@ export const GetaQuote = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(''); // Added error state handling
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const select = (key, val) => setForm({ ...form, [key]: val });
@@ -16,15 +17,33 @@ export const GetaQuote = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(''); // Clear previous errors
+
     try {
-      await fetch('/api/quote', {
+      // DYNAMIC ENVIRONMENT SETUP
+      const envUrl = import.meta.env.VITE_API_URL;
+      const BASE_URL = envUrl 
+        ? envUrl 
+        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
+
+      const res = await fetch(`${BASE_URL}/api/quote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-    } catch {}
-    setSubmitted(true);
-    setLoading(false);
+
+      const result = await res.json().catch(() => ({}));
+
+      if (res.ok && result.success !== false) {
+        setSubmitted(true);
+      } else {
+        setError(result.error || result.message || 'Failed to submit quote request. Please check your network or try again.');
+      }
+    } catch (err) {
+      setError('Unable to connect to the server. Please email your details to info@softechdigitalgroup.com');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const services = [
@@ -40,7 +59,7 @@ export const GetaQuote = () => {
       <h2 className="text-3xl font-black text-[#122a52]">Quote Request Received!</h2>
       <p className="text-slate-500 max-w-md text-sm">Our team will review your requirements and send a detailed proposal within 24–48 hours.</p>
       <button onClick={() => { setSubmitted(false); setStep(1); setForm({ service: '', budget: '', timeline: '', name: '', company: '', email: '', phone: '', description: '' }); }}
-        className="px-6 py-2.5 bg-[#a442af] text-white rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors">
+        className="px-6 py-2.5 bg-[#a442af] text-white rounded-lg text-sm font-semibold hover:bg-[#8a358f] transition-colors cursor-pointer">
         Submit Another
       </button>
     </div>
@@ -73,7 +92,7 @@ export const GetaQuote = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {services.map((s) => (
                 <button key={s} onClick={() => select('service', s)}
-                  className={`p-3 text-sm rounded-xl border-2 font-semibold transition-all duration-200 text-left ${form.service === s ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
+                  className={`p-3 text-sm rounded-xl border-2 font-semibold transition-all duration-200 text-left cursor-pointer ${form.service === s ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
                   {s}
                 </button>
               ))}
@@ -84,7 +103,7 @@ export const GetaQuote = () => {
               <div className="flex flex-wrap gap-3">
                 {budgets.map((b) => (
                   <button key={b} onClick={() => select('budget', b)}
-                    className={`px-4 py-2 text-sm rounded-full border-2 font-semibold transition-all ${form.budget === b ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
+                    className={`px-4 py-2 text-sm rounded-full border-2 font-semibold transition-all cursor-pointer ${form.budget === b ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
                     {b}
                   </button>
                 ))}
@@ -96,7 +115,7 @@ export const GetaQuote = () => {
               <div className="flex flex-wrap gap-3">
                 {timelines.map((t) => (
                   <button key={t} onClick={() => select('timeline', t)}
-                    className={`px-4 py-2 text-sm rounded-full border-2 font-semibold transition-all ${form.timeline === t ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
+                    className={`px-4 py-2 text-sm rounded-full border-2 font-semibold transition-all cursor-pointer ${form.timeline === t ? "border-[#a442af] bg-[#fdeaff] text-[#a442af]" : "border-gray-100 hover:border-[#a442af]/50 text-slate-600"}`}>
                     {t}
                   </button>
                 ))}
@@ -104,7 +123,7 @@ export const GetaQuote = () => {
             </div>
 
             <button onClick={() => setStep(2)} disabled={!form.service}
-              className="flex items-center gap-2 justify-center w-full bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors disabled:opacity-50">
+              className="flex items-center gap-2 justify-center w-full bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors disabled:opacity-50 cursor-pointer">
               Continue <FaLongArrowAltRight />
             </button>
           </div>
@@ -118,10 +137,10 @@ export const GetaQuote = () => {
               rows={8} placeholder="Describe your project goals, features you need, target audience, any existing systems, etc..."
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 resize-none transition-all" />
             <div className="flex gap-3">
-              <button onClick={() => setStep(1)} className="px-6 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-gray-300 transition-colors">
+              <button onClick={() => setStep(1)} className="px-6 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-gray-300 transition-colors cursor-pointer">
                 Back
               </button>
-              <button onClick={() => setStep(3)} className="flex-1 flex items-center gap-2 justify-center bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors">
+              <button onClick={() => setStep(3)} className="flex-1 flex items-center gap-2 justify-center bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors cursor-pointer">
                 Continue <FaLongArrowAltRight />
               </button>
             </div>
@@ -155,12 +174,19 @@ export const GetaQuote = () => {
               <p><span className="font-semibold">Timeline:</span> {form.timeline || "—"}</p>
             </div>
 
+            {/* Error UI rendering */}
+            {error && (
+              <p className="text-red-500 text-xs bg-red-50 px-4 py-3 rounded-lg border border-red-100">
+                {error}
+              </p>
+            )}
+
             <div className="flex gap-3">
-              <button type="button" onClick={() => setStep(2)} className="px-6 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-gray-300 transition-colors">
+              <button type="button" onClick={() => setStep(2)} className="px-6 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-slate-600 hover:border-gray-300 transition-colors cursor-pointer">
                 Back
               </button>
               <button type="submit" disabled={loading}
-                className="flex-1 flex items-center gap-2 justify-center bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors disabled:opacity-60">
+                className="flex-1 flex items-center gap-2 justify-center bg-[#a442af] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#8a358f] transition-colors disabled:opacity-60 cursor-pointer">
                 {loading ? "Submitting..." : <>Submit Quote Request <FaLongArrowAltRight /></>}
               </button>
             </div>

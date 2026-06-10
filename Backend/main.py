@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from flask_pymongo import PyMongo
 import json
 import os
 import smtplib
@@ -70,10 +71,16 @@ def contact():
         'message': data.get('message', '').strip(),
     }
     save_submission('contacts.json', submission)
-    _send_notification_email(
+    
+    # FIX: Check if email sent successfully
+    email_sent = _send_notification_email(
         subject=f"[Softech] New Contact: {submission['name']}",
         body=f"Name: {submission['name']}\nEmail: {submission['email']}\nPhone: {submission['phone']}\nService: {submission['service']}\n\nMessage:\n{submission['message']}"
     )
+    
+    if not email_sent:
+        return jsonify({'success': False, 'message': 'Data saved, but failed to send email notification.'}), 500
+        
     return jsonify({'success': True, 'message': 'Thank you! We will be in touch within 24 hours.'}), 200
 
 # ─── Quote request ────────────────────────────────────────────────────────────
@@ -96,36 +103,17 @@ def quote():
         'description': data.get('description', '').strip(),
     }
     save_submission('quotes.json', submission)
-    _send_notification_email(
+    
+    # FIX: Check if email sent successfully
+    email_sent = _send_notification_email(
         subject=f"[Softech] New Quote: {submission['name']} – {submission['service']}",
-        body=f"Name: {submission['name']}\nEmail: {submission['email']}\nService: {submission['service']}\nBudget: {submission['budget']}\nTimeline: {submission['timeline']}\n\n{submission['description']}"
+        body=f"Name: {submission['name']}\nCompany: {submission['company']}\nEmail: {submission['email']}\nPhone: {submission['phone']}\nService: {submission['service']}\nBudget: {submission['budget']}\nTimeline: {submission['timeline']}\nDescription:\n {submission['description']}"
     )
+    
+    if not email_sent:
+        return jsonify({'success': False, 'message': 'Data saved, but failed to send email notification.'}), 500
+        
     return jsonify({'success': True, 'message': 'Quote request received. Proposal incoming within 24–48 hours.'}), 200
-
-# ─── Job application ──────────────────────────────────────────────────────────
-@app.route('/api/apply', methods=['POST'])
-def apply():
-    data = request.get_json(force=True)
-    for field in ['name', 'email', 'position']:
-        if not data.get(field):
-            return jsonify({'error': f'Missing required field: {field}'}), 400
-
-    submission = {
-        'timestamp': datetime.utcnow().isoformat(),
-        'name': data.get('name', '').strip(),
-        'email': data.get('email', '').strip(),
-        'phone': data.get('phone', '').strip(),
-        'position': data.get('position', '').strip(),
-        'linkedin': data.get('linkedin', '').strip(),
-        'portfolio': data.get('portfolio', '').strip(),
-        'cover': data.get('cover', '').strip(),
-    }
-    save_submission('applications.json', submission)
-    _send_notification_email(
-        subject=f"[Softech] Job Application: {submission['position']} – {submission['name']}",
-        body=f"Position: {submission['position']}\nName: {submission['name']}\nEmail: {submission['email']}\nLinkedIn: {submission['linkedin']}\n\n{submission['cover']}"
-    )
-    return jsonify({'success': True, 'message': 'Application received! We will review and get back to you soon.'}), 200
 
 # ─── Newsletter ───────────────────────────────────────────────────────────────
 @app.route('/api/subscribe', methods=['POST'])
@@ -150,51 +138,49 @@ def admin_quotes():
         return jsonify({'error': 'Unauthorized'}), 401
     return _read_data('quotes.json')
 
-@app.route('/api/admin/applications')
-def admin_applications():
-    if not _check_admin():
-        return jsonify({'error': 'Unauthorized'}), 401
-    return _read_data('applications.json')
+# ─── MongoDB Configuration ──────────────────────────────────────────────────
+app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/softech_db")
+mongo = PyMongo(app)
 
-# ─── Blog endpoints ───────────────────────────────────────────────────────────
+# ─── Blog Endpoints with MongoDB ───────────────────────────────────────────
+
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
-    filepath = os.path.join(DATA_DIR, 'blogs.json')
-    if not os.path.exists(filepath):
-        return jsonify([])
-    with open(filepath) as f:
-        try:
-            posts = json.load(f)
-        except Exception:
-            return jsonify([])
-    published = [p for p in posts if p.get('published', True)]
-    return jsonify(published)
+    try:
+        blogs_collection = mongo.db.blogs
+        posts = list(blogs_collection.find({}, {"_id": 0}))
+        if not _check_admin():
+            posts = [p for p in posts if p.get('published', True)]
+        return jsonify(posts)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/blogs/<slug>', methods=['GET'])
 def get_blog(slug):
-    filepath = os.path.join(DATA_DIR, 'blogs.json')
-    if not os.path.exists(filepath):
-        return jsonify({'error': 'Not found'}), 404
-    with open(filepath) as f:
-        posts = json.load(f)
-    post = next((p for p in posts if p.get('slug') == slug), None)
-    if not post:
-        return jsonify({'error': 'Not found'}), 404
-    return jsonify(post)
+    try:
+        blogs_collection = mongo.db.blogs
+        post = blogs_collection.find_one({"slug": slug}, {"_id": 0})
+        if not post:
+            return jsonify({'error': 'Not found'}), 404
+        return jsonify(post)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/blogs', methods=['POST'])
 def create_blog():
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
+    
     data = request.get_json(force=True)
     for field in ['title', 'slug', 'excerpt', 'content']:
         if not data.get(field):
             return jsonify({'error': f'Missing: {field}'}), 400
+            
     post = {
         'id': int(datetime.utcnow().timestamp()),
-        'slug': data['slug'],
-        'title': data['title'],
-        'excerpt': data['excerpt'],
+        'slug': data['slug'].strip(),
+        'title': data['title'].strip(),
+        'excerpt': data['excerpt'].strip(),
         'content': data['content'],
         'category': data.get('category', 'General'),
         'author': data.get('author', 'Softech Team'),
@@ -205,69 +191,88 @@ def create_blog():
         'published': data.get('published', True),
         'created_at': datetime.utcnow().isoformat(),
     }
-    save_submission('blogs.json', post)
+    
+    mongo.db.blogs.insert_one(post)
+    if '_id' in post: del post['_id']
     return jsonify({'success': True, 'post': post}), 201
 
 @app.route('/api/blogs/<slug>', methods=['PUT'])
 def update_blog(slug):
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
+        
     data = request.get_json(force=True)
-    filepath = os.path.join(DATA_DIR, 'blogs.json')
-    if not os.path.exists(filepath):
-        return jsonify({'error': 'Not found'}), 404
-    with open(filepath) as f:
-        posts = json.load(f)
-    updated = False
-    for i, p in enumerate(posts):
-        if p.get('slug') == slug:
-            posts[i] = {**p, **data, 'updated_at': datetime.utcnow().isoformat()}
-            updated = True
-            break
-    if not updated:
+    blogs_collection = mongo.db.blogs
+    
+    existing_post = blogs_collection.find_one({"slug": slug})
+    if not existing_post:
         return jsonify({'error': 'Post not found'}), 404
-    with open(filepath, 'w') as f:
-        json.dump(posts, f, indent=2)
+
+    updated_fields = {
+        'slug': data.get('slug', existing_post.get('slug')).strip(),
+        'title': data.get('title', existing_post.get('title')).strip(),
+        'excerpt': data.get('excerpt', existing_post.get('excerpt')).strip(),
+        'content': data.get('content', existing_post.get('content')),
+        'category': data.get('category', existing_post.get('category')),
+        'author': data.get('author', existing_post.get('author')),
+        'date': data.get('date', existing_post.get('date')),
+        'readTime': data.get('readTime', existing_post.get('readTime')),
+        'image': data.get('image', existing_post.get('image')),
+        'featured': data.get('featured', existing_post.get('featured', False)),
+        'published': data.get('published', existing_post.get('published', True)),
+        'updated_at': datetime.utcnow().isoformat()
+    }
+    
+    blogs_collection.update_one({"slug": slug}, {"$set": updated_fields})
     return jsonify({'success': True})
 
 @app.route('/api/blogs/<slug>', methods=['DELETE'])
 def delete_blog(slug):
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-    filepath = os.path.join(DATA_DIR, 'blogs.json')
-    if not os.path.exists(filepath):
-        return jsonify({'error': 'Not found'}), 404
-    with open(filepath) as f:
-        posts = json.load(f)
-    posts = [p for p in posts if p.get('slug') != slug]
-    with open(filepath, 'w') as f:
-        json.dump(posts, f, indent=2)
+    
+    result = mongo.db.blogs.delete_one({"slug": slug})
+    if result.deleted_count == 0:
+        return jsonify({'error': 'Post not found'}), 404
+        
     return jsonify({'success': True})
 
-# ─── Email helper ─────────────────────────────────────────────────────────────
+# ─── Email helper (FIXED & IMPROVED) ──────────────────────────────────────────
 def _send_notification_email(subject, body):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_user = os.getenv('SMTP_USER')
-    smtp_pass = os.getenv('SMTP_PASS')
-    notify_to = os.getenv('NOTIFY_EMAIL', 'waqaralioficial@gmail.com')
+    smtp_pass = os.getenv('SMTP_PASS')  # Google App Password (16-digits)
+    notify_to = os.getenv('NOTIFY_EMAIL')
+    
     if not (smtp_host and smtp_user and smtp_pass):
-        return
+        print("Email configuration missing variables.")
+        return False
+        
     try:
         msg = MIMEMultipart()
         msg['From'] = smtp_user
         msg['To'] = notify_to
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
-        with smtplib.SMTP_SSL(smtp_host, 465) as server:
+        
+        # FIX: Using standard standard SMTP + STARTTLS over port 587 (Highly recommended for Gmail)
+        with smtplib.SMTP(smtp_host, 587, timeout=10) as server:
+            server.starttls()  # Upgrade connection to secure TLS
             server.login(smtp_user, smtp_pass)
             server.sendmail(smtp_user, notify_to, msg.as_string())
+            
+        print("Email sent successfully!")
+        return True
     except Exception as e:
-        print(f"Email send failed: {e}")
+        print(f"CRITICAL: Email send failed: {e}")
+        return False
 
 # ─── Serve React SPA ──────────────────────────────────────────────────────────
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve_react(path):
+    if path.startswith('api/'):
+        return jsonify({'error': 'API endpoint not found'}), 404
     dist = app.static_folder
     if path and os.path.exists(os.path.join(dist, path)):
         return send_from_directory(dist, path)

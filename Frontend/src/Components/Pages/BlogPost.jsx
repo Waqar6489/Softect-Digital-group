@@ -3,51 +3,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaCalendar, FaUser, FaClock, FaArrowLeft, FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { MdArrowOutward } from 'react-icons/md';
+import ReactMarkdown from 'react-markdown'; // 🚀 Added Standard Markdown Parser
 import { FALLBACK_POSTS } from './Blog';
 import useScrollReveal from '../useScrollReveal';
-
-// Render markdown-like content (##, **bold**, line breaks)
-const renderContent = (content) => {
-  if (!content) return null;
-  return content.split('\n\n').map((block, i) => {
-    if (block.startsWith('## ')) {
-      return (
-        <h2 key={i} className="text-2xl font-black text-[#122a52] mt-10 mb-4">
-          {block.replace('## ', '')}
-        </h2>
-      );
-    }
-    if (block.startsWith('# ')) {
-      return (
-        <h1 key={i} className="text-3xl font-black text-[#122a52] mt-10 mb-4">
-          {block.replace('# ', '')}
-        </h1>
-      );
-    }
-    // Numbered list
-    if (/^\d+\./.test(block)) {
-      const lines = block.split('\n');
-      return (
-        <ul key={i} className="flex flex-col gap-3 my-4">
-          {lines.map((line, j) => (
-            <li key={j} className="flex items-start gap-3 text-slate-600 text-base leading-relaxed">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-[#a442af] text-white text-xs flex items-center justify-center font-bold mt-0.5">
-                {line.match(/^(\d+)\./)?.[1]}
-              </span>
-              <span>{line.replace(/^\d+\.\s*/, '')}</span>
-            </li>
-          ))}
-        </ul>
-      );
-    }
-    // Bold text
-    const formatted = block.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    return (
-      <p key={i} className="text-slate-600 text-base leading-relaxed my-3"
-        dangerouslySetInnerHTML={{ __html: formatted }} />
-    );
-  });
-};
 
 export const BlogPost = () => {
   useScrollReveal();
@@ -61,7 +19,6 @@ export const BlogPost = () => {
     setLoading(true);
     const API = import.meta.env.VITE_API_URL || '';
 
-    // Try API first, fall back to static posts
     fetch(`${API}/api/blogs/${slug}`)
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {
@@ -72,7 +29,6 @@ export const BlogPost = () => {
         const found = FALLBACK_POSTS.find(p => p.slug === slug);
         if (found) {
           setPost(found);
-          setRelated(FALLBACK_POSTS.filter(p => p.slug !== slug && p.category === found.category).slice(0, 3));
         }
         setLoading(false);
       });
@@ -80,7 +36,9 @@ export const BlogPost = () => {
 
   useEffect(() => {
     if (post) {
-      setRelated(FALLBACK_POSTS.filter(p => p.slug !== post.slug && p.category === post.category).slice(0, 3));
+      // API data database se aaye ya fallback se, related posts filter ho jayengi
+      const allPosts = FALLBACK_POSTS; 
+      setRelated(allPosts.filter(p => p.slug !== post.slug && p.category === post.category).slice(0, 3));
     }
   }, [post]);
 
@@ -111,10 +69,9 @@ export const BlogPost = () => {
 
   return (
     <div className="w-full bg-white page-enter">
-
       {/* Hero image */}
       <div className="relative w-full h-64 md:h-96 overflow-hidden">
-        <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+        <img src={post.image || 'https://images.unsplash.com/photo-1518770660439-4636190af475'} alt={post.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#122a52]/80 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-5 md:px-20 pb-8">
           <span className="text-xs font-bold bg-[#a442af] text-white px-3 py-1 rounded-full">
@@ -125,7 +82,6 @@ export const BlogPost = () => {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-5 md:px-10 py-12">
-
         {/* Back */}
         <button onClick={() => navigate('/blog')}
           className="flex items-center gap-2 text-sm text-slate-400 hover:text-[#a442af] transition-colors cursor-pointer mb-8 group">
@@ -136,7 +92,7 @@ export const BlogPost = () => {
         {/* Meta */}
         <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 mb-6">
           <span className="flex items-center gap-1.5"><FaCalendar />
-            {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {post.date ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent'}
           </span>
           <span className="flex items-center gap-1.5"><FaUser /> {post.author}</span>
           <span className="flex items-center gap-1.5"><FaClock /> {post.readTime}</span>
@@ -155,9 +111,11 @@ export const BlogPost = () => {
         {/* Divider */}
         <div className="w-full h-px bg-gray-100 mb-10" />
 
-        {/* Body */}
-        <div className="prose-custom reveal">
-          {post.content ? renderContent(post.content) : (
+        {/* Body (Markdown Renderer Integration) */}
+        <div className="reveal prose prose-slate max-w-none prose-headings:text-[#122a52] prose-headings:font-black prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-slate-600 prose-p:leading-relaxed prose-p:my-4 prose-strong:text-[#122a52]">
+          {post.content ? (
+            <ReactMarkdown>{post.content}</ReactMarkdown>
+          ) : (
             <p className="text-slate-500">Content coming soon.</p>
           )}
         </div>
@@ -193,7 +151,7 @@ export const BlogPost = () => {
             <h3 className="text-2xl font-black text-[#122a52] mb-8 reveal">Related Articles</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
               {related.map(p => (
-                <Link key={p.id} to={`/blog/${p.slug}`} className="reveal block">
+                <Link key={p.slug} to={`/blog/${p.slug}`} className="reveal block">
                   <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
                     <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />
                     <div className="p-5 flex flex-col gap-2">

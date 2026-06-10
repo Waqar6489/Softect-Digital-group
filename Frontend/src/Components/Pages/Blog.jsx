@@ -234,40 +234,44 @@ const NewsletterSection = () => {
   const [message, setMessage] = useState('');
 
   const handleSubscribe = async (e) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      setStatus('error');
-      setMessage('Please enter a valid email address.');
-      return;
-    }
-    setStatus('loading');
-    try {
-      const API = import.meta.env.VITE_API_URL || '';
-      const res = await fetch(`${API}/api/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      if (res.ok) {
-        setStatus('success');
-        setMessage(`You're subscribed! We'll send updates to ${email}`);
-        setEmail('');
-      } else {
-        setStatus('error');
-        setMessage('Something went wrong. Please try again.');
-      }
-    } catch {
-      // Backend not reachable — still show success (email saved locally)
+  e.preventDefault();
+  if (!email || !email.includes('@')) {
+    setStatus('error');
+    setMessage('Please enter a valid email address.');
+    return;
+  }
+  setStatus('loading');
+  try {
+    const envUrl = import.meta.env.VITE_API_URL;
+    const BASE_URL = envUrl 
+      ? envUrl 
+      : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
+
+    const res = await fetch(`${BASE_URL}/api/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }), // Fixed: passing the correct email state object
+    });
+    if (res.ok) {
       setStatus('success');
       setMessage(`You're subscribed! We'll send updates to ${email}`);
       setEmail('');
+    } else {
+      setStatus('error');
+      setMessage('Something went wrong. Please try again.');
     }
-    // Reset message after 5 seconds
-    setTimeout(() => {
-      setStatus('idle');
-      setMessage('');
-    }, 5000);
-  };
+  } catch {
+    // Backend not reachable — still show success (email saved locally)
+    setStatus('success');
+    setMessage(`You're subscribed! We'll send updates to ${email}`);
+    setEmail('');
+  }
+  // Reset message after 5 seconds
+  setTimeout(() => {
+    setStatus('idle');
+    setMessage('');
+  }, 5000);
+};
 
   return (
     <section className="py-16 px-5 bg-[#FAF8FF] text-center">

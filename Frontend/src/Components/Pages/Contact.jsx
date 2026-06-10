@@ -17,20 +17,33 @@ export const Contact = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
     try {
-      const API = import.meta.env.VITE_API_URL || '';
-      const res = await fetch(`${API}/api/contact`, {
+      // 1. DYNAMIC ENVIRONMENT SETUP:
+      // Agar .env file mein VITE_API_URL majood hai to wo use hoga.
+      // Agar nahi hai, aur aap 'localhost' par hain to auto http://localhost:5000 set ho jayega.
+      // Agar aap live domain par hain to Relative Path ('') automatic chalega.
+      const envUrl = import.meta.env.VITE_API_URL;
+      const BASE_URL = envUrl 
+        ? envUrl 
+        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
+
+      const res = await fetch(`${BASE_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      if (res.ok) {
+
+      const result = await res.json().catch(() => ({})); // Safe json parsing
+
+      if (res.ok && (result.success !== false)) {
         setSubmitted(true);
         setForm({ name: '', email: '', phone: '', service: '', message: '' });
       } else {
-        setError('Something went wrong. Please try again or email us directly.');
+        // Flask ka bheja hua actual error handle karne ke liye
+        setError(result.error || result.message || 'Something went wrong. Please try again or email us directly.');
       }
-    } catch {
+    } catch (err) {
       setError('Unable to connect. Please email us at info@softechdigitalgroup.com');
     }
     setLoading(false);
@@ -93,9 +106,9 @@ export const Contact = () => {
               <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-4">Follow Us</p>
               <div className="flex gap-3">
                 {[
-                  { icon: <FaLinkedin />, label: "LinkedIn", href: "#" },
-                  { icon: <FaInstagram />, label: "Instagram", href: "#" },
-                  { icon: <FaFacebook />, label: "Facebook", href: "#" },
+                  { icon: <FaLinkedin />, label: "LinkedIn", href: "https://www.linkedin.com/company/softech-digital-group" },
+                  { icon: <FaInstagram />, label: "Instagram", href: "https://www.instagram.com/softechdigitalgroup_official/" },
+                  { icon: <FaFacebook />, label: "Facebook", href: "https://web.facebook.com/people/Softech-Digital-Group/61560570009995/" },
                 ].map((s, i) => (
                   <a key={i} href={s.href} target="_blank" rel="noreferrer"
                     className="p-3 bg-[#fdf9ff] border border-purple-100 rounded-xl text-[#a442af] hover:bg-[#a442af] hover:text-white transition-colors duration-300">
@@ -153,7 +166,7 @@ export const Contact = () => {
                       <option>E-Commerce</option>
                       <option>Artificial Intelligence</option>
                       <option>Blockchain</option>
-                      <option>UI/UX Design</option>
+                      <option>Product Development</option>
                       <option>Other</option>
                     </select>
                   </div>
