@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import Logo from "./logo";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
-import { MdArrowOutward } from "react-icons/md";
+import { MdArrowOutward } from "react-icons/md"; // Double check your package name ('react-icons/md' or 'react-icons/fa')
 
 const servicesMenu = [
   { label: "Web Development", path: "/services/web-development" },
@@ -25,7 +25,6 @@ const solutionsMenu = [
 const companyMenu = [
   { label: "About Us", path: "/company" },
   { label: "Works / Portfolio", path: "/works" },
-  
 ];
 
 const DropdownMenu = ({ items, isOpen }) => (
@@ -52,6 +51,7 @@ const NavItem = ({ label, to, dropdown }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = to && location.pathname.startsWith(to);
 
   useEffect(() => {
@@ -66,17 +66,21 @@ const NavItem = ({ label, to, dropdown }) => {
     setOpen(false);
   }, [location.pathname]);
 
+  // FIX 1: If it has a dropdown, make the primary click navigate to the parent path 
+  // while allowing mouse hover states to control dropdown visibility cleanly.
   if (dropdown) {
     return (
       <div
         ref={ref}
-        className="relative"
+        className="relative py-2" // Added padding to eliminate "dead zones" when moving mouse to dropdown
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
       >
         <button
-          onClick={() => setOpen(!open)}
-          className={`flex items-center gap-1 font-medium text-sm transition-colors duration-200 py-1 ${
+          onClick={() => {
+            if (to) navigate(to); // Dynamically navigate to the parent path on click
+          }}
+          className={`flex items-center gap-1 font-medium text-sm transition-colors duration-200 py-1 cursor-pointer ${
             isActive ? "text-[#a442af]" : "text-gray-700 hover:text-[#a442af]"
           }`}
         >
@@ -86,7 +90,7 @@ const NavItem = ({ label, to, dropdown }) => {
           />
         </button>
         {isActive && (
-          <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-[#a442af] rounded-full" />
+          <span className="absolute bottom-1 left-0 w-full h-0.5 bg-[#a442af] rounded-full" />
         )}
         <DropdownMenu items={dropdown} isOpen={open} />
       </div>
@@ -138,7 +142,6 @@ const Navbar = () => {
             <NavItem label="Company" to="/company" dropdown={companyMenu} />
             <NavItem label="Career" to="/career" />
             <NavItem label="Blog & Insights" to="/blog" />
-
           </div>
 
           {/* Desktop CTA */}
@@ -165,22 +168,25 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
+      {/* FIX 4: Changed 'max-h-screen' to a defined pixel boundary 'max-h-[500px]' or similar so CSS transitions animate properly */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-400 ${
-          menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+        className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
+          menuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="bg-white border-t border-gray-100 px-5 pb-5 flex flex-col gap-1">
 
           {/* Services accordion */}
+          {/* FIX 2: Wrapped headers in separate Links or added clear navigation targets for mobile users */}
           <div>
-            <button
-              onClick={() => toggleMobile("services")}
-              className="flex justify-between items-center w-full py-3 text-gray-700 font-medium text-sm border-b border-gray-50"
-            >
-              Services
-              <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "services" ? "rotate-180" : ""}`} />
-            </button>
+            <div className="flex justify-between items-center w-full border-b border-gray-50">
+              <Link to="/services" className="py-3 text-gray-700 font-medium text-sm flex-grow">
+                Services
+              </Link>
+              <button onClick={() => toggleMobile("services")} className="p-3 cursor-pointer">
+                <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "services" ? "rotate-180" : ""}`} />
+              </button>
+            </div>
             {mobileExpanded === "services" && (
               <div className="flex flex-col gap-1 pt-2 pl-3">
                 {servicesMenu.map((item, i) => (
@@ -194,13 +200,14 @@ const Navbar = () => {
 
           {/* Solutions accordion */}
           <div>
-            <button
-              onClick={() => toggleMobile("solutions")}
-              className="flex justify-between items-center w-full py-3 text-gray-700 font-medium text-sm border-b border-gray-50"
-            >
-              Solutions
-              <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "solutions" ? "rotate-180" : ""}`} />
-            </button>
+            <div className="flex justify-between items-center w-full border-b border-gray-50">
+              <Link to="/solutions" className="py-3 text-gray-700 font-medium text-sm flex-grow">
+                Solutions
+              </Link>
+              <button onClick={() => toggleMobile("solutions")} className="p-3 cursor-pointer">
+                <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "solutions" ? "rotate-180" : ""}`} />
+              </button>
+            </div>
             {mobileExpanded === "solutions" && (
               <div className="flex flex-col gap-1 pt-2 pl-3">
                 {solutionsMenu.map((item, i) => (
@@ -214,13 +221,14 @@ const Navbar = () => {
 
           {/* Company accordion */}
           <div>
-            <button
-              onClick={() => toggleMobile("company")}
-              className="flex justify-between items-center w-full py-3 text-gray-700 font-medium text-sm border-b border-gray-50"
-            >
-              Company
-              <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "company" ? "rotate-180" : ""}`} />
-            </button>
+            <div className="flex justify-between items-center w-full border-b border-gray-50">
+              <Link to="/company" className="py-3 text-gray-700 font-medium text-sm flex-grow">
+                Company
+              </Link>
+              <button onClick={() => toggleMobile("company")} className="p-3 cursor-pointer">
+                <FaChevronDown className={`text-[10px] transition-transform ${mobileExpanded === "company" ? "rotate-180" : ""}`} />
+              </button>
+            </div>
             {mobileExpanded === "company" && (
               <div className="flex flex-col gap-1 pt-2 pl-3">
                 {companyMenu.map((item, i) => (
@@ -237,7 +245,7 @@ const Navbar = () => {
 
           <div className="pt-3">
             <Link to="/get-a-quote">
-              <button className="w-full bg-[#a442af] text-white py-2.5 rounded-lg text-sm font-semibold active:scale-95 transition-transform">
+              <button className="w-full bg-[#a442af] text-white py-2.5 rounded-lg text-sm font-semibold active:scale-95 transition-transform cursor-pointer">
                 Get a Quote
               </button>
             </Link>

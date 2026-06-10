@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdArrowOutward } from 'react-icons/md';
 
+
 export const XDRM = () => {
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -164,7 +165,7 @@ export const XDRM = () => {
                 </div>
                 <h3 className="text-base font-bold text-[#122a52] mb-2">{item.title}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed mb-4">{item.desc}</p>
-                <span className="text-[11px] font-bold text-[#a442af] group-hover:underline cursor-pointer">Learn more →</span>
+                
               </div>
             ))}
           </div>
@@ -186,7 +187,7 @@ export const XDRM = () => {
             { step: "4", title: "Get Paid", desc: "Instant algorithmic verification." }
           ].map((item, index) => (
             <div key={index} className="bg-white p-6 rounded-xl border border-slate-200/80 relative shadow-sm">
-              <div className="absolute top-3 left-4 text-xs font-black text-purple-100/50 text-4xl select-none">0{item.step}</div>
+              <div className="absolute top-3 left-4 text-xs font-black text-purple-200/100 text-4xl select-none">0{item.step}</div>
               <div className="relative z-10 pt-4">
                 <h4 className="text-base font-extrabold text-[#122a52] mb-1">{item.title}</h4>
                 <p className="text-xs text-slate-400">{item.desc}</p>

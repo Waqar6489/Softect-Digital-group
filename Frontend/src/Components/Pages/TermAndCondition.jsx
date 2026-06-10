@@ -50,10 +50,13 @@ export const TermAndCondition = () => {
     ]
     console.log(data)
     return (
-        <div className=' flex flex-col gap-6 p-10 w-full lg:px-30 py-10'>
-            <div className='flex flex-col py-10'>
-                <h1 className='text-4xl text-[#122a52] font-sans lg:text-5xl font-black'>Terms & Conditions</h1>
-            </div>
+        <div className=' w-full'>
+             <section className="bg-[#122a52] py-20 px-5 text-center">
+                <span className="text-xs font-bold text-[#a442af] uppercase tracking-widest bg-[#a442af]/10 px-3 py-1 rounded-full">Terms & Conditions</span>
+                <h1 className="mt-4 text-4xl md:text-5xl font-black text-white">Terms & Conditions</h1>
+
+            </section>
+            <div className='flex flex-col gap-3 px-3 py-5 md:px-10 lg:px-30 lg:py-15 '>
             {data.map((privacydata, idx) => (
                 <div key={idx} className=' flex flex-col '>
                     <div className='flex flex-col gap-0.5'>
@@ -63,6 +66,7 @@ export const TermAndCondition = () => {
                 </div>
 
             ))}
+            </div>
         </div>
     )
 }

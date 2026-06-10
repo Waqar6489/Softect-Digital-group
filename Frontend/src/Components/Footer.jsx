@@ -19,11 +19,11 @@ export const Footer = () => {
           </p>
           <div className='flex gap-3 mt-2'>
             {[
-              { icon: <FaLinkedin />, href: "#" },
-              { icon: <FaInstagram />, href: "#" },
-              { icon: <FaFacebook />, href: "#" },
-              { icon: <FaXTwitter />, href: "#" },
-              { icon: <FaYoutube />, href: "#" },
+              { icon: <FaLinkedin />, href: "https://www.linkedin.com/company/softech-digital-group" },
+              { icon: <FaInstagram />, href: "https://www.instagram.com/softechdigitalgroup_official/" },
+              { icon: <FaFacebook />, href: "https://web.facebook.com/people/Softech-Digital-Group/61560570009995/" },
+              // { icon: <FaXTwitter />, href: "https://softechdigitalgroup.com/" },
+              { icon: <FaYoutube />, href: "https://www.youtube.com/@SoftechDigitalGroup/" },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noreferrer"
                 className='text-[#adb4b4] hover:text-[#a442af] transition-colors text-lg'>

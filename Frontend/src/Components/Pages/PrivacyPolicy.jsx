@@ -59,31 +59,38 @@ export const PrivacyPolicy = () => {
     ]
     console.log(data)
     return (
-        <div className=' flex flex-col gap-3 p-10 w-full lg:px-30 py-15  '>
-            <div className='flex flex-col gap-10'>
-                <h1 className='text-4xl text-[#122a52] font-sans lg:text-5xl font-black'>Privacy Policy</h1>
-                <p className='text-sm text-[#8b9292] text-justify font-sans lg:text-base font-normal'>At <b>Softech Digital Group,</b> we value your trust and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and safeguard your data when you interact with our websites, applications, products, and digital services.</p>
-            </div>
-            {data.map((privacydata, idx) => (
-                <div key={idx} className=' flex flex-col'>
-                    <div className='flex flex-col gap-0.5'>
-                        <h2 className='text-xl text-[#122a52] font-sans lg:text-2xl font-bold'>{privacydata.head2}</h2>
-                        <p className='text-sm text-justify text-[#8b9292] font-sans lg:text-base font-normal '>{privacydata.paragragh}</p>
-                        <h3 className='text-md text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_1}</h3>
-                        <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_1}</p>
-                        <h3 className='text-xl text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_2}</h3>
-                        <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_2}</p>
-                        <h3 className='text-xl text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_3}</h3>
-                        <p className='text-sm  text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_3}</p>
-                    </div>
-                    
-                </div>
+        <div className='w-full '>
+            <section className="bg-[#122a52] py-20 px-5 text-center">
+                <span className="text-xs font-bold text-[#a442af] uppercase tracking-widest bg-[#a442af]/10 px-3 py-1 rounded-full">Privacy Policy</span>
+                <h1 className="mt-4 text-4xl md:text-5xl font-black text-white">Privacy Policy</h1>
 
-            ))}
-               <div>
-                    <h2 className='text-xl text-[#122a52] font-sans lg:text-2xl font-bold'>14. Contact Us</h2>
-                    <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal '>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:<br></br> Softech Digital Group Email: <a href="mailto:info@softechdigitalgroup.com" className="text-blue-500 underline">info@softechdigitalgroup.com</a> <br></br> Website: <a href="https://Softechdigitalgroup.com" className="text-blue-500 underline">Softechdigitalgroup.com</a> <br></br>Location 1: Pakistan (Local Office) - IBA City Campus, Plot # 68 & 88 Garden, Kiyani Shaheed Rd, Karachi <br></br>Location 2: UK (Regional Office) - Freckleton Business Centre, Freckleton Street, Blackburn, England, BB2 2AL <br></br> By using our services, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.</p>
+            </section>
+            <div className='flex flex-col gap-3 px-3 py-5 md:px-10 lg:px-30 lg:py-15 '>
+                <div >
+
+                    <p className='text-sm text-[#8b9292] text-justify font-sans lg:text-base font-normal'>At <b>Softech Digital Group,</b> we value your trust and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and safeguard your data when you interact with our websites, applications, products, and digital services.</p>
                 </div>
+                {data.map((privacydata, idx) => (
+                    <div key={idx} className=' flex flex-col'>
+                        <div className='flex flex-col gap-0.5'>
+                            <h2 className='text-xl text-[#122a52] font-sans lg:text-2xl font-bold'>{privacydata.head2}</h2>
+                            <p className='text-sm text-justify text-[#8b9292] font-sans lg:text-base font-normal '>{privacydata.paragragh}</p>
+                            <h3 className='text-md text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_1}</h3>
+                            <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_1}</p>
+                            <h3 className='text-xl text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_2}</h3>
+                            <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_2}</p>
+                            <h3 className='text-xl text-[#122a52] font-sans lg:text-xl font-medium px-3'>{privacydata.Head3_3}</h3>
+                            <p className='text-sm  text-[#8b9292] font-sans lg:text-base font-normal px-3'>{privacydata.paragragh_3}</p>
+                        </div>
+
+                    </div>
+
+                ))}
+                <div>
+                    <h2 className='text-xl text-[#122a52] font-sans lg:text-2xl font-bold'>14. Contact Us</h2>
+                    <p className='text-sm text-[#8b9292] font-sans lg:text-base font-normal '>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us at:<br></br> Softech Digital Group Email: <a href="mailto:info@softechdigitalgroup.com" className="text-blue-500 underline">info@softechdigitalgroup.com</a> <br></br> Website: <a href="https://Softechdigitalgroup.com" className="text-blue-500 underline">Softechdigitalgroup.com</a> <br></br>Location 1: Pakistan (Local Office) - IBA City Campus, Plot # 68 & 88 Garden, Kiyani Shaheed Rd, Karachi <br></br>Location 2: UK (Regional Office) - Swan Buildings, Manchester M4 5JW <br></br> By using our services, you acknowledge that you have read and understood this Privacy Policy and agree to its terms.</p>
+                </div>
+            </div>
         </div>
     )
 }

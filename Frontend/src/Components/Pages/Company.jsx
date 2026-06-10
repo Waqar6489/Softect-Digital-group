@@ -256,7 +256,7 @@ export const Company = () => {
         <div className="pb-10">
           <div className=" grid sm:grid-cols-1 w-auto md:grid-cols-2 gap-6 lg:grid-cols-4 lg:p-5">
             {cardData.map((card, index) => (
-              <div key={index} className=" h-50  flex flex-col items-start bg-white p-5 rounded-lg border border-gray-100 shadow-md  ">
+              <div key={index} className=" h-55  flex flex-col items-start bg-white p-5 rounded-lg border border-gray-100 shadow-md  ">
                 {/* <div className="absolute top-0 left-0 h-0.5 w-0 bg-[#a442af] transition-all duration-300 group-hover:w-full overflow-hidden "></div> */}
                 <div className="text-3xl mb-4 text-[#a442af]">{card.icon}</div>
                 <h3 className="text-2xl font-bold mb-2">{card.title}</h3>

@@ -36,7 +36,7 @@ export const Career = () => {
                 At Softech Digital Group, we believe innovation starts with people. We’re a team of thinkers, creators, and engineers dedicated to building world-class digital products from software and mobile apps to AI and blockchain solutions.
               </p>
               <p className="text-sm font-semibold text-[#122a52]">
-                If you’re passionate about technology, growth, and creativity, Softech Digital Group is the place where your ideas can make an impact.
+                If you’re passionate about technology, growth, and creativity, <br></br>Softech Digital Group is the place where your ideas can make an impact.
               </p>
               
               <div className="pt-2">
@@ -195,7 +195,7 @@ export const Career = () => {
               { phase: "04", title: "Final Call / Offer", desc: "Selected professionals receive a formal offer and custom welcome package documentation." }
             ].map((step, sIdx) => (
               <div key={sIdx} className="bg-slate-50 border border-slate-200/60 p-6 rounded-xl relative shadow-sm hover:bg-white transition-colors group">
-                <span className="absolute top-3 left-4 text-3xl font-black text-purple-100/60 group-hover:text-[#a442af]/10 select-none transition-colors">{step.phase}</span>
+                <span className="absolute top-3 left-4 text-3xl font-black text-purple-200/100 group-hover:text-[#a442af]/10 select-none transition-colors">{step.phase}</span>
                 <div className="relative z-10 pt-4">
                   <h4 className="text-sm font-black text-[#122a52] mb-2">{step.title}</h4>
                   <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>

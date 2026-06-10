@@ -2,6 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 import { MdArrowOutward } from 'react-icons/md';
+import { GrTechnology } from "react-icons/gr";
+import { MdLocalPharmacy } from "react-icons/md";
+import { GiFamilyHouse } from "react-icons/gi";
+import { MdConstruction } from "react-icons/md";
+import { FaBuildingNgo } from "react-icons/fa6";
+import { FaServicestack } from "react-icons/fa";
+
+
 
 export const HRM = () => {
   return (
@@ -80,9 +88,7 @@ export const HRM = () => {
               A strong HR system fuels a strong organization. We listen to your business needs and build solutions that eliminate HR challenges so your team can focus on growth.
             </p>
             <div className="pt-2">
-              <button className="px-5 py-2.5 cursor-pointer rounded-md bg-[#a442af] text-white font-bold text-xs hover:transition-colors uppercase tracking-wider">
-                Book a Demo
-              </button>
+            
             </div>
           </div>
 
@@ -162,9 +168,7 @@ export const HRM = () => {
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 italic mb-4">{module.tagline}</p>
-                  <button className="w-full cursor-pointer py-2 bg-slate-50 hover:bg-[#a442af] hover:text-white transition-colors rounded text-xs font-bold text-[#a442af] border border-slate-100">
-                    Get Started
-                  </button>
+                  
                 </div>
               </div>
             ))}
@@ -181,10 +185,10 @@ export const HRM = () => {
             <h4 className="font-black text-sm uppercase tracking-wider text-[#a442af]">Multiple Attendance Options</h4>
             <p className="text-xs text-slate-400">An intelligent attendance engine with powerful flexibility:</p>
             <ul className="space-y-2 text-xs text-slate-600 font-medium">
-              <li>📍 GPS-based attendance for field teams</li>
-              <li>🎛️ Biometric device connectivity</li>
-              <li>🏢 Multi-location attendance support</li>
-              <li>⏱️ Auto-calculated working hours & overtime</li>
+              <li> GPS-based attendance for field teams</li>
+              <li> Biometric device connectivity</li>
+              <li> Multi-location attendance support</li>
+              <li> Auto-calculated working hours & overtime</li>
             </ul>
             <p className="text-xs font-bold text-[#122a52] pt-2 border-t border-slate-100">
               Your workforce is always accounted for no matter where they are.
@@ -196,11 +200,11 @@ export const HRM = () => {
             <h4 className="font-black text-sm uppercase tracking-wider text-[#a442af]">Build a Progressive Work Culture</h4>
             <p className="text-xs text-slate-400">Create a workplace that motivates, develops, and retains talent:</p>
             <ul className="space-y-2 text-xs text-slate-600">
-              <li>📈 Interactive performance management</li>
-              <li>🛣️ Career path development tracks</li>
-              <li>📱 Employee self-service responsive mobile app</li>
-              <li>⚙️ Seamless training & development workflows</li>
-              <li>📋 Flexible corporate HR policy implementation</li>
+              <li> Interactive performance management</li>
+              <li> Career path development tracks</li>
+              <li> Employee self-service responsive mobile app</li>
+              <li> Seamless training & development workflows</li>
+              <li> Flexible corporate HR policy implementation</li>
             </ul>
           </div>
 
@@ -209,10 +213,10 @@ export const HRM = () => {
             <h4 className="font-black text-sm uppercase tracking-wider text-[#a442af]">Data Security & Access Control</h4>
             <p className="text-xs text-slate-400">Your data. Your custom organizational visibility rules:</p>
             <ul className="space-y-2 text-xs text-slate-600">
-              <li>🔐 Role-based system access</li>
-              <li>👁️ Hierarchical data node visibility</li>
-              <li>🔄 Secure transaction permission cycles</li>
-              <li>🛡️ Comprehensive strict privacy controls</li>
+              <li> Role-based system access</li>
+              <li> Hierarchical data node visibility</li>
+              <li> Secure transaction permission cycles</li>
+              <li> Comprehensive strict privacy controls</li>
             </ul>
             <p className="text-xs font-bold text-slate-400 pt-2 border-t border-slate-100 italic">
               Confidentiality is always completely protected.
@@ -295,7 +299,9 @@ export const HRM = () => {
         <div className="flex flex-wrap justify-center items-center gap-3 text-xs font-bold text-slate-600">
           {["Technology", "Pharma & Manufacturing", "Retail", "Construction", "NGOs", "Services & Agencies"].map((industry, i) => (
             <span key={i} className="px-3 py-1.5 bg-white border border-slate-200 rounded-md shadow-sm">
-              🏢 {industry}
+              <div className='flex gap-1'>
+              <GrTechnology></GrTechnology> {industry}
+              </div>
             </span>
           ))}
         </div>
