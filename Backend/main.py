@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-# from flask_pymongo import PyMongo
 import json
 import os
 import smtplib
@@ -39,15 +38,24 @@ def save_submission(filename, data):
 def _read_data(filename):
     filepath = os.path.join(DATA_DIR, filename)
     if not os.path.exists(filepath):
-        return jsonify([])
+        return []
     with open(filepath, 'r') as f:
-        return jsonify(json.load(f))
+        try:
+            return json.load(f)
+        except Exception:
+            return []
+
+def _write_data(filename, data):
+    filepath = os.path.join(DATA_DIR, filename)
+    with open(filepath, 'w') as f:
+        json.dump(data, f, indent=2)
 
 def _check_admin():
     admin_key = os.getenv('ADMIN_KEY', '')
-    if admin_key and request.headers.get('X-Admin-Key') != admin_key:
+    if not admin_key:
         return False
-    return True
+    received_key = request.headers.get('X-Admin-Key', '')
+    return received_key == admin_key
 
 # ─── Health check ─────────────────────────────────────────────────────────────
 @app.route('/api/health')
@@ -72,7 +80,6 @@ def contact():
     }
     save_submission('contacts.json', submission)
     
-    # FIX: Check if email sent successfully
     email_sent = _send_notification_email(
         subject=f"[Softech] New Contact: {submission['name']}",
         body=f"Name: {submission['name']}\nEmail: {submission['email']}\nPhone: {submission['phone']}\nService: {submission['service']}\n\nMessage:\n{submission['message']}"
@@ -104,7 +111,6 @@ def quote():
     }
     save_submission('quotes.json', submission)
     
-    # FIX: Check if email sent successfully
     email_sent = _send_notification_email(
         subject=f"[Softech] New Quote: {submission['name']} – {submission['service']}",
         body=f"Name: {submission['name']}\nCompany: {submission['company']}\nEmail: {submission['email']}\nPhone: {submission['phone']}\nService: {submission['service']}\nBudget: {submission['budget']}\nTimeline: {submission['timeline']}\nDescription:\n {submission['description']}"
@@ -130,25 +136,22 @@ def subscribe():
 def admin_contacts():
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-    return _read_data('contacts.json')
+    return jsonify(_read_data('contacts.json'))
 
 @app.route('/api/admin/quotes')
 def admin_quotes():
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
-    return _read_data('quotes.json')
+    return jsonify(_read_data('quotes.json'))
 
-# ─── MongoDB Configuration ──────────────────────────────────────────────────
-app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/softech_db")
-mongo = PyMongo(app)
 
-# ─── Blog Endpoints with MongoDB ───────────────────────────────────────────
+# ─── JSON File Based Blog Endpoints (No MongoDB Needed!) ───────────────────
 
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
     try:
-        blogs_collection = mongo.db.blogs
-        posts = list(blogs_collection.find({}, {"_id": 0}))
+        posts = _read_data('blogs.json')
+        # If user is not admin, only show published articles
         if not _check_admin():
             posts = [p for p in posts if p.get('published', True)]
         return jsonify(posts)
@@ -158,8 +161,8 @@ def get_blogs():
 @app.route('/api/blogs/<slug>', methods=['GET'])
 def get_blog(slug):
     try:
-        blogs_collection = mongo.db.blogs
-        post = blogs_collection.find_one({"slug": slug}, {"_id": 0})
+        posts = _read_data('blogs.json')
+        post = next((p for p in posts if p['slug'] == slug), None)
         if not post:
             return jsonify({'error': 'Not found'}), 404
         return jsonify(post)
@@ -176,6 +179,12 @@ def create_blog():
         if not data.get(field):
             return jsonify({'error': f'Missing: {field}'}), 400
             
+    posts = _read_data('blogs.json')
+    
+    # Check if slug already exists
+    if any(p['slug'] == data['slug'].strip() for p in posts):
+        return jsonify({'error': 'A blog with this slug already exists'}), 400
+
     post = {
         'id': int(datetime.utcnow().timestamp()),
         'slug': data['slug'].strip(),
@@ -187,13 +196,13 @@ def create_blog():
         'date': data.get('date', datetime.utcnow().strftime('%Y-%m-%d')),
         'readTime': data.get('readTime', '5 min read'),
         'image': data.get('image', ''),
-        'featured': data.get('featured', False),
-        'published': data.get('published', True),
+        'featured': bool(data.get('featured', False)),
+        'published': bool(data.get('published', True)),
         'created_at': datetime.utcnow().isoformat(),
     }
     
-    mongo.db.blogs.insert_one(post)
-    if '_id' in post: del post['_id']
+    posts.append(post)
+    _write_data('blogs.json', posts)
     return jsonify({'success': True, 'post': post}), 201
 
 @app.route('/api/blogs/<slug>', methods=['PUT'])
@@ -202,13 +211,16 @@ def update_blog(slug):
         return jsonify({'error': 'Unauthorized'}), 401
         
     data = request.get_json(force=True)
-    blogs_collection = mongo.db.blogs
+    posts = _read_data('blogs.json')
     
-    existing_post = blogs_collection.find_one({"slug": slug})
-    if not existing_post:
+    post_index = next((i for i, p in enumerate(posts) if p['slug'] == slug), None)
+    if post_index is None:
         return jsonify({'error': 'Post not found'}), 404
 
+    existing_post = posts[post_index]
+
     updated_fields = {
+        'id': existing_post.get('id'),
         'slug': data.get('slug', existing_post.get('slug')).strip(),
         'title': data.get('title', existing_post.get('title')).strip(),
         'excerpt': data.get('excerpt', existing_post.get('excerpt')).strip(),
@@ -218,12 +230,14 @@ def update_blog(slug):
         'date': data.get('date', existing_post.get('date')),
         'readTime': data.get('readTime', existing_post.get('readTime')),
         'image': data.get('image', existing_post.get('image')),
-        'featured': data.get('featured', existing_post.get('featured', False)),
-        'published': data.get('published', existing_post.get('published', True)),
+        'featured': data.get('featured') if 'featured' in data else existing_post.get('featured', False),
+        'published': data.get('published') if 'published' in data else existing_post.get('published', True),
+        'created_at': existing_post.get('created_at'),
         'updated_at': datetime.utcnow().isoformat()
     }
     
-    blogs_collection.update_one({"slug": slug}, {"$set": updated_fields})
+    posts[post_index] = updated_fields
+    _write_data('blogs.json', posts)
     return jsonify({'success': True})
 
 @app.route('/api/blogs/<slug>', methods=['DELETE'])
@@ -231,17 +245,21 @@ def delete_blog(slug):
     if not _check_admin():
         return jsonify({'error': 'Unauthorized'}), 401
     
-    result = mongo.db.blogs.delete_one({"slug": slug})
-    if result.deleted_count == 0:
+    posts = _read_data('blogs.json')
+    filtered_posts = [p for p in posts if p['slug'] != slug]
+    
+    if len(posts) == len(filtered_posts):
         return jsonify({'error': 'Post not found'}), 404
         
+    _write_data('blogs.json', filtered_posts)
     return jsonify({'success': True})
 
-# ─── Email helper (FIXED & IMPROVED) ──────────────────────────────────────────
+
+# ─── Email helper ─────────────────────────────────────────────────────────────
 def _send_notification_email(subject, body):
     smtp_host = os.getenv('SMTP_HOST')
     smtp_user = os.getenv('SMTP_USER')
-    smtp_pass = os.getenv('SMTP_PASS')  # Google App Password (16-digits)
+    smtp_pass = os.getenv('SMTP_PASS')
     notify_to = os.getenv('NOTIFY_EMAIL')
     
     if not (smtp_host and smtp_user and smtp_pass):
@@ -255,9 +273,8 @@ def _send_notification_email(subject, body):
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
         
-        # FIX: Using standard standard SMTP + STARTTLS over port 587 (Highly recommended for Gmail)
         with smtplib.SMTP(smtp_host, 587, timeout=10) as server:
-            server.starttls()  # Upgrade connection to secure TLS
+            server.starttls()
             server.login(smtp_user, smtp_pass)
             server.sendmail(smtp_user, notify_to, msg.as_string())
             

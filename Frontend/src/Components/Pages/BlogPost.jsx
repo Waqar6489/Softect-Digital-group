@@ -3,8 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FaCalendar, FaUser, FaClock, FaArrowLeft, FaFacebook, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { MdArrowOutward } from 'react-icons/md';
-import ReactMarkdown from 'react-markdown'; // 🚀 Added Standard Markdown Parser
-import { FALLBACK_POSTS } from './Blog';
+import ReactMarkdown from 'react-markdown';
 import useScrollReveal from '../useScrollReveal';
 
 export const BlogPost = () => {
@@ -15,32 +14,33 @@ export const BlogPost = () => {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // FETCH SPECIFIC POST AND RELATED POSTS DYNAMICALLY
   useEffect(() => {
     setLoading(true);
     const API = import.meta.env.VITE_API_URL || '';
 
+    // 1. Fetch Current Blog Article
     fetch(`${API}/api/blogs/${slug}`)
       .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => {
-        setPost(data);
-        setLoading(false);
+      .then(currentPost => {
+        setPost(currentPost);
+
+        // 2. Fetch All Blogs using immediate local context instead of depending on raw state transitions
+        return fetch(`${API}/api/blogs`).then(res => res.ok ? res.json() : []).then(allPosts => {
+          if (Array.isArray(allPosts) && currentPost) {
+            const matches = allPosts.filter(p => p.slug !== slug && p.category === currentPost.category);
+            setRelated(matches.slice(0, 3));
+          }
+        });
       })
       .catch(() => {
-        const found = FALLBACK_POSTS.find(p => p.slug === slug);
-        if (found) {
-          setPost(found);
-        }
+        setPost(null);
+        setRelated([]);
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }, [slug]);
-
-  useEffect(() => {
-    if (post) {
-      // API data database se aaye ya fallback se, related posts filter ho jayengi
-      const allPosts = FALLBACK_POSTS; 
-      setRelated(allPosts.filter(p => p.slug !== post.slug && p.category === post.category).slice(0, 3));
-    }
-  }, [post]);
+  }, [slug]); // FIXED: Removed post?.category to permanently block continuous dynamic render triggers
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -65,7 +65,7 @@ export const BlogPost = () => {
   );
 
   const shareUrl = encodeURIComponent(window.location.href);
-  const shareTitle = encodeURIComponent(post.title);
+  const shareTitle = encodeURIComponent(post.title || '');
 
   return (
     <div className="w-full bg-white page-enter">
@@ -94,32 +94,43 @@ export const BlogPost = () => {
           <span className="flex items-center gap-1.5"><FaCalendar />
             {post.date ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent'}
           </span>
-          <span className="flex items-center gap-1.5"><FaUser /> {post.author}</span>
-          <span className="flex items-center gap-1.5"><FaClock /> {post.readTime}</span>
+          <span className="flex items-center gap-1.5"><FaUser /> {post.author || 'Softech Team'}</span>
+          <span className="flex items-center gap-1.5"><FaClock /> {post.readTime || '5 min read'}</span>
         </div>
 
-        {/* Title */}
-        <h1 className="text-3xl md:text-5xl font-black text-[#122a52] leading-tight mb-6 reveal">
+        {/* Title — FIXED: Removed opacity-0 layout wrapper conflict */}
+        <h1 className="text-3xl md:text-5xl font-black text-[#122a52] leading-tight mb-6">
           {post.title}
         </h1>
 
-        {/* Excerpt */}
-        <p className="text-lg text-[#a442af] italic font-medium border-l-4 border-[#a442af] pl-5 py-2 bg-[#fdf9ff] rounded-r-xl mb-10 reveal">
-          {post.excerpt}
-        </p>
+        {/* Excerpt — FIXED */}
+        {post.excerpt && (
+          <p className="text-lg text-[#a442af] italic font-medium border-l-4 border-[#a442af] pl-5 py-2 bg-[#fdf9ff] rounded-r-xl mb-10">
+            {post.excerpt}
+          </p>
+        )}
 
         {/* Divider */}
         <div className="w-full h-px bg-gray-100 mb-10" />
 
+        {/* Body (Markdown Renderer Integration) — FIXED */}
         {/* Body (Markdown Renderer Integration) */}
-        <div className="reveal prose prose-slate max-w-none prose-headings:text-[#122a52] prose-headings:font-black prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-slate-600 prose-p:leading-relaxed prose-p:my-4 prose-strong:text-[#122a52]">
-          {post.content ? (
-            <ReactMarkdown>{post.content}</ReactMarkdown>
-          ) : (
-            <p className="text-slate-500">Content coming soon.</p>
-          )}
-        </div>
+        {/* Body (HTML Renderer Integration) — REMOVED ReactMarkdown */}
+        <div
+          className="prose prose-slate max-w-none 
+               prose-headings:text-[#122a52] prose-headings:font-black 
+               prose-h2:text-5xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:font-extrabold
+               prose-p:text-slate-600 prose-p:leading-relaxed prose-p:my-4 
+               prose-strong:text-[#122a52] prose-strong:font-black
+    
+               /*  FIXED LISTS STYLING */
+               prose-ul:list-disc prose-ol:list-decimal 
+               [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-4
+               [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-4
+               [&_li]:text-slate-600 [&_li]:my-1"
 
+          dangerouslySetInnerHTML={{ __html: post.content || '<p class="text-slate-500">Content coming soon.</p>' }}
+        />
         {/* Divider */}
         <div className="w-full h-px bg-gray-100 mt-12 mb-8" />
 
@@ -148,17 +159,17 @@ export const BlogPost = () => {
       {related.length > 0 && (
         <section className="py-16 px-5 bg-[#FAF8FF]">
           <div className="max-w-7xl mx-auto">
-            <h3 className="text-2xl font-black text-[#122a52] mb-8 reveal">Related Articles</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
+            <h3 className="text-2xl font-black text-[#122a52] mb-8">Related Articles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map(p => (
-                <Link key={p.slug} to={`/blog/${p.slug}`} className="reveal block">
-                  <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                    <img src={p.image} alt={p.title} className="w-full h-40 object-cover" />
+                <Link key={p.slug} to={`/blog/${p.slug}`} className="block">
+                  <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer h-full">
+                    <img src={p.image || 'https://images.unsplash.com/photo-1518770660439-4636190af475'} alt={p.title} className="w-full h-40 object-cover" />
                     <div className="p-5 flex flex-col gap-2">
                       <span className="text-xs font-bold bg-[#fdeaff] text-[#a442af] px-2.5 py-1 rounded-full w-fit">{p.category}</span>
-                      <h4 className="font-black text-[#122a52] text-base leading-snug">{p.title}</h4>
+                      <h4 className="font-black text-[#122a52] text-base leading-snug line-clamp-2">{p.title}</h4>
                       <p className="text-xs text-slate-400 line-clamp-2">{p.excerpt}</p>
-                      <span className="text-xs font-semibold text-[#a442af] flex items-center gap-1 mt-1">
+                      <span className="text-xs font-semibold text-[#a442af] flex items-center gap-1 mt-auto pt-2">
                         Read More <MdArrowOutward />
                       </span>
                     </div>

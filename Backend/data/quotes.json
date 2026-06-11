@@ -64,5 +64,16 @@
     "budget": "$5,000 \u2013 $15,000",
     "timeline": "1 \u2013 3 Months",
     "description": ""
+  },
+  {
+    "timestamp": "2026-06-11T12:19:26.939329",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "",
+    "service": "Web Development",
+    "budget": "< $5,000",
+    "timeline": "1 \u2013 3 Months",
+    "description": "helo"
   }
 ]

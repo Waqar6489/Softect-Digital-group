@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaSave, FaTimes, FaLock } from 'react-icons/fa';
 import { MdArrowOutward } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { Editor } from '@tinymce/tinymce-react'; 
 
 const API = import.meta.env.VITE_API_URL || '';
+// 🚀 Read TinyMCE Key securely from environment variables
+const TINYMCE_KEY = import.meta.env.VITE_TINYMCE_API_KEY || '';
 
 // ── Login Gate ────────────────────────────────────────────────────────────────
 const LoginGate = ({ onLogin }) => {
@@ -12,14 +15,12 @@ const LoginGate = ({ onLogin }) => {
 
   const handle = async (e) => {
     e.preventDefault();
-    // Verify key by making a test POST with empty data
     const res = await fetch(`${API}/api/blogs`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key },
       body: JSON.stringify({ title: '', slug: '', excerpt: '', content: '' }),
     });
     if (res.status === 401) { setError('Wrong admin key. Try again.'); return; }
-    // 400 = key was accepted (just missing fields), which means key is correct
     if (res.status === 400 || res.status === 201) {
       sessionStorage.setItem('blog_admin_key', key);
       onLogin(key);
@@ -48,7 +49,7 @@ const LoginGate = ({ onLogin }) => {
             Sign In
           </button>
         </form>
-        <p className="text-xs text-slate-300 text-center">Set ADMIN_KEY in your Render environment variables</p>
+        <p className="text-xs text-slate-300 text-center">Set ADMIN_KEY in your server environment variables</p>
       </div>
     </div>
   );
@@ -67,11 +68,10 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
   const isEdit = !!post;
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  // Auto-generate slug from title
   const handleTitle = (val) => {
     set('title', val);
     if (!isEdit) {
-      set('slug', val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+      set('slug', val.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
     }
   };
 
@@ -83,10 +83,12 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
     try {
       const url = isEdit ? `${API}/api/blogs/${post.slug}` : `${API}/api/blogs`;
       const method = isEdit ? 'PUT' : 'POST';
+      const submissionForm = isEdit ? form : { ...form, date: new Date().toISOString().split('T')[0] };
+
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey },
-        body: JSON.stringify(form),
+        body: JSON.stringify(submissionForm),
       });
       if (!res.ok) { const d = await res.json(); setError(d.error || 'Save failed.'); }
       else onSave();
@@ -103,7 +105,7 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
           <div className="flex items-center gap-3">
             <button onClick={() => setPreview(!preview)}
               className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-slate-600 hover:border-[#a442af] cursor-pointer transition-colors">
-              <FaEye /> {preview ? 'Edit' : 'Preview'}
+              <FaEye /> {preview ? 'Edit Form' : 'Live Preview'}
             </button>
             <button onClick={onCancel} className="text-slate-400 hover:text-slate-600 cursor-pointer p-2">
               <FaTimes />
@@ -112,16 +114,18 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
         </div>
 
         {preview ? (
-          /* Preview */
-          <div className="p-8 max-h-[70vh] overflow-y-auto">
-            {form.image && <img src={form.image} alt="" className="w-full h-48 object-cover rounded-xl mb-6" />}
+          <div className="p-8 max-h-[70vh] overflow-y-auto bg-white">
+            {form.image && <img src={form.image} alt="" className="w-full h-56 object-cover rounded-xl mb-6 shadow-sm" />}
             <span className="text-xs font-bold bg-[#fdeaff] text-[#a442af] px-3 py-1 rounded-full">{form.category}</span>
-            <h1 className="text-3xl font-black text-[#122a52] mt-4 mb-3">{form.title || 'Title here...'}</h1>
-            <p className="text-[#a442af] italic font-medium border-l-4 border-[#a442af] pl-4 mb-6">{form.excerpt || 'Excerpt here...'}</p>
-            <div className="text-slate-600 text-sm whitespace-pre-wrap leading-relaxed">{form.content || 'Content here...'}</div>
+            <h1 className="text-3xl font-black text-[#122a52] mt-4 mb-3">{form.title || 'Untitled Post'}</h1>
+            <p className="text-[#a442af] italic font-medium border-l-4 border-[#a442af] pl-4 mb-6 bg-purple-50/40 py-1">{form.excerpt || 'No excerpt written yet...'}</p>
+            
+            <div 
+              className="prose prose-slate max-w-none prose-headings:text-[#122a52] prose-headings:font-black prose-p:text-slate-600 prose-strong:text-[#122a52] prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 mt-4"
+              dangerouslySetInnerHTML={{ __html: form.content || '<p class="text-slate-400 italic">No content typed yet. Switch back to Edit to write your post body.</p>' }}
+            />
           </div>
         ) : (
-          /* Form */
           <div className="p-8 flex flex-col gap-5 max-h-[70vh] overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="flex flex-col gap-1.5 md:col-span-2">
@@ -131,7 +135,7 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Slug (URL) *</label>
-                <input value={form.slug} onChange={e => set('slug', e.target.value)} placeholder="my-post-url"
+                <input value={form.slug} onChange={e => set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-'))} placeholder="my-post-url"
                   className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all font-mono" />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -162,16 +166,38 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
                   placeholder="A short 1-2 sentence summary shown on the blog listing page..."
                   className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all resize-none" />
               </div>
+              
+              {/* Content Section — FIXED with Dynamic Safe API Key Integration */}
               <div className="flex flex-col gap-1.5 md:col-span-2">
-                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                  Content * — use ## for headings, **bold** for bold text
+                <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                  Content *
                 </label>
-                <textarea value={form.content} onChange={e => set('content', e.target.value)} rows={14}
-                  placeholder={`## Introduction\n\nYour content here...\n\n## Section Title\n\nMore content...`}
-                  className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#a442af] focus:ring-2 focus:ring-[#a442af]/10 transition-all resize-none font-mono" />
-                <p className="text-xs text-slate-300">Tip: Use ## for headings, **text** for bold. Separate paragraphs with a blank line.</p>
+                <div className="border border-gray-200 rounded-xl overflow-hidden focus-within:border-[#a442af] focus-within:ring-2 focus-within:ring-[#a442af]/10 transition-all">
+                  <Editor
+                    apiKey={TINYMCE_KEY} // 🚀 Using the secure key read from server/env variables
+                    init={{
+                      height: 450,
+                      menubar: false,
+                      plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                      ],
+                      toolbar: 'undo redo | blocks | ' +
+                        'bold italic forecolor | alignleft aligncenter ' +
+                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                        'removeformat | help',
+                      content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:14px; color: #334155; }',
+                      branding: false,
+                      statusbar: true
+                    }}
+                    value={form.content}
+                    onEditorChange={(newContent) => set('content', newContent)}
+                  />
+                </div>
               </div>
-              <div className="flex gap-6">
+
+              <div className="flex gap-6 mt-2">
                 <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-slate-600">
                   <input type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)}
                     className="w-4 h-4 accent-[#a442af] cursor-pointer" />
@@ -184,7 +210,7 @@ const PostForm = ({ post, adminKey, onSave, onCancel }) => {
                 </label>
               </div>
             </div>
-            {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
+            {error && <p className="text-red-500 text-sm bg-red-50 px-4 py-3 rounded-xl mt-2">{error}</p>}
           </div>
         )}
 
@@ -229,12 +255,17 @@ export const BlogAdmin = () => {
   const deletePost = async (slug) => {
     if (!window.confirm('Delete this post permanently?')) return;
     setDeleting(slug);
-    await fetch(`${API}/api/blogs/${slug}`, {
-      method: 'DELETE',
-      headers: { 'X-Admin-Key': adminKey },
-    });
-    setDeleting(null);
-    loadPosts();
+    try {
+      await fetch(`${API}/api/blogs/${slug}`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Key': adminKey },
+      });
+      loadPosts();
+    } catch (err) {
+      alert('Failed to delete post.');
+    } finally {
+      setDeleting(null);
+    }
   };
 
   const logout = () => { sessionStorage.removeItem('blog_admin_key'); setAdminKey(''); };
@@ -243,7 +274,6 @@ export const BlogAdmin = () => {
 
   return (
     <div className="min-h-screen bg-[#fdf9ff]">
-      {/* Header */}
       <div className="bg-white border-b border-gray-100 px-5 md:px-10 py-4 flex items-center justify-between sticky top-16 z-20">
         <div>
           <h1 className="text-xl font-black text-[#122a52]">Blog Admin</h1>
@@ -265,7 +295,6 @@ export const BlogAdmin = () => {
         </div>
       </div>
 
-      {/* Posts table */}
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-10">
         {loading ? (
           <div className="flex justify-center py-20">
@@ -296,8 +325,8 @@ export const BlogAdmin = () => {
                     {post.featured && <span className="text-xs font-bold bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full">⭐ Featured</span>}
                     {!post.published && <span className="text-xs font-bold bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full">Draft</span>}
                   </div>
-                  <h3 className="font-black text-[#122a52] truncate">{post.title}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">{post.date} · {post.readTime} · by {post.author}</p>
+                  <h3 className="font-black text-[#122a52] truncate">{post.title || "Untitled"}</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">{post.date || 'No Date'} · {post.readTime} · by {post.author}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Link to={`/blog/${post.slug}`} target="_blank"
@@ -319,7 +348,6 @@ export const BlogAdmin = () => {
         )}
       </div>
 
-      {/* Post form modal */}
       {showForm && (
         <PostForm
           post={editPost}
