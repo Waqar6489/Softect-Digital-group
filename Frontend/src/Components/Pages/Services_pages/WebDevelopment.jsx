@@ -13,13 +13,6 @@ import Reviews from '../../Reviews';
 import FAQ from '../../FAQ';
 import useScrollReveal from '../../useScrollReveal';
 
-const webTabs = {
-  Frontend:   { icon: null, color: 'from-violet-500 to-purple-600', tools: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS'] },
-  Backend:    { icon: null, color: 'from-purple-600 to-indigo-600', tools: ['Node.js', 'Django', 'Laravel', 'FastAPI', 'Express'] },
-  CMS:        { icon: null, color: 'from-fuchsia-500 to-purple-600', tools: ['WordPress', 'Webflow', 'Strapi', 'Contentful', 'Sanity'] },
-  eCommerce:  { icon: null, color: 'from-violet-600 to-fuchsia-600', tools: ['Shopify', 'WooCommerce', 'Magento', 'BigCommerce', 'Stripe'] },
-  'Cloud':    { icon: null, color: 'from-indigo-500 to-violet-700', tools: ['AWS', 'Firebase', 'Vercel', 'Netlify', 'Docker'] },
-};
 
 const clientReviews = [
   { message: "Outstanding web development services, our conversions doubled!", ClientName: "John Smith", ClientPost: "CEO, Swift Solutions Inc.", clientImage: "https://randomuser.me/api/portraits/men/32.jpg", ImgAlt: "John Smith" },
@@ -130,7 +123,7 @@ export const WebDevelopment = () => {
       </section>
 
       {/* ── TECH STACK ───────────────────────────────────────────────────── */}
-      <TechStack tabs={webTabs} title="Our Tech Stack" />
+      <TechStack title="Our Tech Stack" />
 
       {/* ── REVIEWS ──────────────────────────────────────────────────────── */}
       <Reviews title="What Our Clients Say" reviews={clientReviews} />

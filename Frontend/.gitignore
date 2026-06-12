@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 #api form backend and thirdparty
-.env
+*.env
