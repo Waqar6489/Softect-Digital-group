@@ -54,7 +54,7 @@ const NewsletterSection = () => {
       const envUrl = import.meta.env.VITE_API_URL;
       const BASE_URL = envUrl 
         ? envUrl 
-        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
+        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://softect-digital-group.onrender.com');
 
       const res = await fetch(`${BASE_URL}/api/subscribe`, {
         method: 'POST',
