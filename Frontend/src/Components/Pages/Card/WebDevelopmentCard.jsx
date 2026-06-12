@@ -21,7 +21,7 @@ const WebDevelopmentCard = () => {
       value: "Built Around Your Vision.",
       desc:  "We create fully customized websites tailored to your business needs.",
       list: ["Custom design & development", "Scalable architecture", "High-performance optimization", "API & third-party integrations"],
-      image: game,
+      image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       bgColor: "bg-white",
     },
     {
@@ -48,7 +48,7 @@ const WebDevelopmentCard = () => {
       value: "Control Your Content Effortlessly",
       desc: "Manage your website easily with powerful CMS solutions.",
       list: ["WordPress, Webflow, Headless CMS", "Custom dashboards", "Easy content management", "Plugin & module development"],
-      image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=1206&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "https://plus.unsplash.com/premium_photo-1720287601920-ee8c503af775?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Q01TJTIwZGV2ZWxvcG1lbnR8ZW58MHx8MHx8fDA%3D",
       bgColor: "bg-[#f9fafb]"
     },
     {
@@ -57,7 +57,7 @@ const WebDevelopmentCard = () => {
       value: "Beyond Websites, Build Platforms.",
       desc:  "We develop scalable web applications for modern businesses.",
       list: ["SaaS product development", "Dashboard & admin panels", "API development & integration", "Cloud-based architecture"],
-      image: game,
+      image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       bgColor: "bg-white",
     },
     {
@@ -66,7 +66,7 @@ const WebDevelopmentCard = () => {
       value: "Design That Converts.",
       desc: "Create intuitive and engaging user experiences.",
       list: ["Wireframing & prototyping", "User journey mapping", "Interactive UI design", "Conversion optimization"],
-      image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=1206&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       bgColor: "bg-[#f9fafb]"
     },
     {
@@ -75,7 +75,7 @@ const WebDevelopmentCard = () => {
       value: "Fast. Secure. Reliable.",
       desc:  "Ensure your website is protected and performs at its best.",
       list: ["SSL & security implementation", "Speed optimization", "Performance audits", "Bug fixing & maintenance"],
-      image: game,
+      image: 'https://plus.unsplash.com/premium_photo-1674506654010-22677db35bdf?q=80&w=1460&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       bgColor: "bg-white",
     },
     {
@@ -84,7 +84,7 @@ const WebDevelopmentCard = () => {
       value: "Be Found. Be Fast.",
       desc: "Boost your visibility and ranking on search engines.",
       list: ["On-page SEO optimization", "Technical SEO setup", "Speed & Core Web Vitals improvement", "Analytics & tracking setup"],
-      image: "https://images.unsplash.com/photo-1605379399642-870262d3d051?q=80&w=1206&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=1106&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       bgColor: "bg-[#f9fafb]"
     },
   ];

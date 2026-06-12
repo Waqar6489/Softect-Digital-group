@@ -22,7 +22,7 @@ const MobileDevelopmentCard = () => {
             value: "Delivering engaging iPhone experiences that boost brand value and retention.",
             desc: "Our iOS app solutions focus on delivering seamless user experiences, aligning with your brand identity, and maximizing ROI.",
             list: ["Custom iPhone app development following Apple’s Human Interface Guidelines", "High-performance apps using Flutter and React Native frameworks", "Continuous monitoring, updates, and performance optimization", "Collecting user feedback and implementing iterative improvements"],
-            image: game,
+            image: 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             bgColor: "bg-white",
         },
         {
@@ -40,7 +40,7 @@ const MobileDevelopmentCard = () => {
             value: "Custom e-commerce apps to elevate customer shopping experiences.",
             desc: "We design apps that streamline operations and provide intuitive navigation, aligning with your brand and business goals.",
             list: ["Tailored design for unique brand identity and customer experience", "Seamless integration with existing tools and platforms", "Focused on enhancing usability and operational efficiency"],
-            image: game,
+            image: 'https://images.unsplash.com/photo-1726066012801-14d892021339?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             bgColor: "bg-white",
         },
         {
@@ -58,7 +58,7 @@ const MobileDevelopmentCard = () => {
             value: "Streamlining business operations with intelligent apps.",
             desc: "We help enterprises turn data into actionable insights and modernize workflows with innovative mobile solutions.",
             list: ["Integrated analytics and business intelligence tools", "Industry-standard security and compliance", "Modernized legacy systems for better performance and lower maintenance", "Intuitive interfaces for user-friendly operations"],
-            image: game,
+            image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             bgColor: "bg-white",
         }
     ];

@@ -26,7 +26,7 @@ const ArtificialIntelligenceCard = () => {
             "Risk evaluation tools for finance, insurance, and enterprise planning",
             "Customized ML models tailored to your business needs"
         ],
-        image: "https://picsum.photos/id/0/1200/800",
+        image: "https://plus.unsplash.com/premium_photo-1683121710572-7723bd2e235d?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         bgColor: "bg-white",
     },
     {
@@ -110,7 +110,7 @@ const ArtificialIntelligenceCard = () => {
             "Reduce operational, scaling, and market-entry risks proactively",
             "Automate system decision-making utilizing live-trained AI models"
         ],
-        image: "https://picsum.photos/id/3px/1200/800",
+        image: "https://plus.unsplash.com/premium_photo-1681487767138-ddf2d67b35c1?q=80&w=1255&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         bgColor: "bg-white",
     },
     {

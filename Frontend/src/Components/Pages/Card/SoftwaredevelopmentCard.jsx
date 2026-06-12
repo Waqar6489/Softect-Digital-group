@@ -40,7 +40,7 @@ const SoftwareDevelopmentCard = () => {
             "UI/UX designs tested by real users for smooth navigation",
             "Strategic alignment of all design elements with brand identity"
         ],
-        image: "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?q=80&w=1200&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1587440871875-191322ee64b0?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         bgColor: "bg-[#f9fafb]"
     },
     {
@@ -96,7 +96,7 @@ const SoftwareDevelopmentCard = () => {
             "IoT APIs for secure and efficient smart device communication",
             "Extensive automated testing for reliability and performance"
         ],
-        image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?q=80&w=1200&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1593720213428-28a5b9e94613?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         bgColor: "bg-[#f9fafb]"
     },
     {

@@ -1,27 +1,54 @@
 import React, { useState } from 'react';
-import { Layout, Server, Database, ShoppingCart, Cloud, Cpu, Smartphone, Gamepad2, Shield } from 'lucide-react';
+import { Layout, Server, Database, Cloud } from 'lucide-react';
+// 🚀 Imported SimpleIcon component for brand-specific tech logos
+import SimpleIcon from 'simple-icons-react-component';
 
 /**
  * Reusable TechStack component.
- * Props: tabs – object mapping tab name → { icon, color, tools: [{ name, logo? }] }
- * Falls back to a default general stack if no tabs prop given.
+ * Updated: 'tools' arrays now hold objects specifying the tool's display 'name' 
+ * and its exact 'slug' corresponding to the official SimpleIcons library.
  */
 const defaultTabs = {
   Frontend: {
     icon: <Layout className="w-4 h-4" />, color: 'from-violet-500 to-purple-600',
-    tools: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS']
+    tools: [
+      { name: 'React', slug: 'react' },
+      { name: 'Next.js', slug: 'nextdotjs' },
+      { name: 'Vue.js', slug: 'vuedotjs' },
+      { name: 'TypeScript', slug: 'typescript' },
+      { name: 'Tailwind CSS', slug: 'tailwindcss' }
+    ]
   },
   Backend: {
     icon: <Server className="w-4 h-4" />, color: 'from-purple-600 to-indigo-600',
-    tools: ['Node.js', 'Python / Django', 'Laravel', 'FastAPI', 'GraphQL']
+    tools: [
+      { name: 'Node.js', slug: 'nodedotjs' },
+      { name: 'Python', slug: 'python' },
+      { name: 'Django', slug: 'django' },
+      { name: 'Laravel', slug: 'laravel' },
+      { name: 'FastAPI', slug: 'fastapi' },
+      { name: 'GraphQL', slug: 'graphql' }
+    ]
   },
   Database: {
     icon: <Database className="w-4 h-4" />, color: 'from-fuchsia-500 to-purple-600',
-    tools: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis', 'Firebase']
+    tools: [
+      { name: 'PostgreSQL', slug: 'postgresql' },
+      { name: 'MongoDB', slug: 'mongodb' },
+      { name: 'MySQL', slug: 'mysql' },
+      { name: 'Redis', slug: 'redis' },
+      { name: 'Firebase', slug: 'firebase' }
+    ]
   },
   'Cloud & DevOps': {
     icon: <Cloud className="w-4 h-4" />, color: 'from-indigo-500 to-violet-700',
-    tools: ['AWS', 'Docker', 'Kubernetes', 'Vercel', 'CI/CD Pipelines']
+    tools: [
+      { name: 'AWS', slug: 'amazonaws' },
+      { name: 'Docker', slug: 'docker' },
+      { name: 'Kubernetes', slug: 'kubernetes' },
+      { name: 'Vercel', slug: 'vercel' },
+      { name: 'GitHub Actions', slug: 'githubactions' }
+    ]
   },
 };
 
@@ -60,19 +87,29 @@ const TechStack = ({ tabs = defaultTabs, title = "Our Tech Stack" }) => {
 
         {/* Tool cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 reveal-stagger">
-          {tabs[active]?.tools.map((tool, i) => (
-            <div
-              key={i}
-              className="reveal tech-badge bg-white border border-purple-100 rounded-2xl p-5 flex flex-col items-center gap-3 shadow-sm cursor-default"
-            >
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tabs[active].color} flex items-center justify-center text-white font-black text-lg shadow-md`}>
-                {typeof tool === 'string' ? tool[0] : tool.initial}
+          {tabs[active]?.tools.map((tool, i) => {
+            const toolName = typeof tool === 'string' ? tool : tool.name;
+            const toolSlug = typeof tool === 'object' ? tool.slug : tool.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            return (
+              <div
+                key={i}
+                className="reveal tech-badge bg-white border border-purple-100 rounded-2xl p-5 flex flex-col items-center gap-3 shadow-sm hover:shadow-md hover:border-purple-200 transition-all duration-300 cursor-default group"
+              >
+                {/* 🚀 FIXED LOGO CONTAINER: Renders brand SVG icon instead of alphabet */}
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tabs[active].color} flex items-center justify-center text-white p-2.5 shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                  {toolSlug ? (
+                    <SimpleIcon name={toolSlug} fill="currentColor" className="w-full h-full object-contain" />
+                  ) : (
+                    <span className="font-black text-lg uppercase">{toolName[0]}</span>
+                  )}
+                </div>
+                <span className="text-sm font-semibold text-slate-700 text-center leading-tight">
+                  {toolName}
+                </span>
               </div>
-              <span className="text-sm font-semibold text-slate-700 text-center leading-tight">
-                {typeof tool === 'string' ? tool : tool.name}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -26,7 +26,7 @@ const ProductDevelopmentCard = () => {
             "Custom UI/UX designs and information architectures to enhance engagement",
             "Strategic layouts that balance aesthetics with functional usability"
         ],
-        image: "[https://images.unsplash.com/photo-1581291518062-c9a79e7e9f3e?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1581291518062-c9a79e7e9f3e?q=80&w=1200&auto=format&fit=crop)",
+        image: "https://plus.unsplash.com/premium_photo-1682140914933-f9704d7bc14f?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         bgColor: "bg-white",
     },
     {
@@ -40,7 +40,7 @@ const ProductDevelopmentCard = () => {
             "Functional prototyping to test assumptions before full-scale development",
             "Seamless transition from MVP to a complete, market-ready product"
         ],
-        image: "[https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1200&auto=format&fit=crop)",
+        image: "https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1200&auto=format&fit=crop",
         bgColor: "bg-[#f9fafb]"
     },
     {
@@ -54,7 +54,7 @@ const ProductDevelopmentCard = () => {
             "Design refinement based on feedback to reduce development costs",
             "Optimization of navigation and intuitiveness prior to development"
         ],
-        image: "[https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1200&auto=format&fit=crop)",
+        image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1200&auto=format&fit=crop",
         bgColor: "bg-white",
     },
     {
@@ -68,7 +68,7 @@ const ProductDevelopmentCard = () => {
             "Design of interfaces that reinforce brand trust and user satisfaction",
             "Data-driven journey mapping to ensure intuitive user interactions"
         ],
-        image: "[https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop)",
+        image: "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop",
         bgColor: "bg-[#f9fafb]"
     },
     {
@@ -82,7 +82,7 @@ const ProductDevelopmentCard = () => {
             "High-fidelity visual designs strictly aligned with brand identity",
             "Consistent design systems for a unified look across all platforms"
         ],
-        image: "[https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop](https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop)",
+        image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop",
         bgColor: "bg-white",
     }
 ];
