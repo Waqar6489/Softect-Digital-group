@@ -22,7 +22,7 @@ export const GetaQuote = () => {
     try {
       // DYNAMIC ENVIRONMENT SETUP
       const envUrl = import.meta.env.VITE_API_URL;
-      const BASE_URL = envUrl 
+      const BASE_URL = (envUrl && envUrl.trim())
         ? envUrl 
         : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
 

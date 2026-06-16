@@ -24,7 +24,7 @@ export const Contact = () => {
       // Agar nahi hai, aur aap 'localhost' par hain to auto http://localhost:5000 set ho jayega.
       // Agar aap live domain par hain to Relative Path ('') automatic chalega.
       const envUrl = import.meta.env.VITE_API_URL;
-      const BASE_URL = envUrl 
+      const BASE_URL = (envUrl && envUrl.trim())
         ? envUrl 
         : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
 

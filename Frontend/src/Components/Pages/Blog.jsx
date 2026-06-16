@@ -52,9 +52,9 @@ const NewsletterSection = () => {
     setStatus('loading');
     try {
       const envUrl = import.meta.env.VITE_API_URL;
-      const BASE_URL = envUrl 
+      const BASE_URL = (envUrl && envUrl.trim())
         ? envUrl 
-        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://softect-digital-group.onrender.com');
+        : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
 
       const res = await fetch(`${BASE_URL}/api/subscribe`, {
         method: 'POST',
@@ -137,7 +137,8 @@ export const Blog = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || '';
+    const envUrl = import.meta.env.VITE_API_URL;
+    const API = (envUrl && envUrl.trim()) ? envUrl : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
     fetch(`${API}/api/blogs`)
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => {

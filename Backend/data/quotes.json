@@ -75,5 +75,27 @@
     "budget": "< $5,000",
     "timeline": "1 \u2013 3 Months",
     "description": "helo"
+  },
+  {
+    "timestamp": "2026-06-12T05:21:50.780659",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "",
+    "service": "Web Development",
+    "budget": "$5,000 \u2013 $15,000",
+    "timeline": "3 \u2013 6 Months",
+    "description": "testing"
+  },
+  {
+    "timestamp": "2026-06-16T04:05:06.777700",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "Softech Digital Group | UK",
+    "service": "E-Commerce",
+    "budget": "$15,000 \u2013 $50,000",
+    "timeline": "3 \u2013 6 Months",
+    "description": "testing new"
   }
 ]

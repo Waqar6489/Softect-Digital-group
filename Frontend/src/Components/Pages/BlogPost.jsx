@@ -17,7 +17,8 @@ export const BlogPost = () => {
   // FETCH SPECIFIC POST AND RELATED POSTS DYNAMICALLY
   useEffect(() => {
     setLoading(true);
-    const API = import.meta.env.VITE_API_URL || '';
+    const _envUrl = import.meta.env.VITE_API_URL;
+    const API = (_envUrl && _envUrl.trim()) ? _envUrl : (window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
 
     // 1. Fetch Current Blog Article
     fetch(`${API}/api/blogs/${slug}`)

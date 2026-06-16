@@ -4,7 +4,8 @@ import { MdArrowOutward } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react'; 
 
-const API = import.meta.env.VITE_API_URL || '';
+const _envApiUrl = import.meta.env.VITE_API_URL;
+const API = (_envApiUrl && _envApiUrl.trim()) ? _envApiUrl : (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '');
 // 🚀 Read TinyMCE Key securely from environment variables
 const TINYMCE_KEY = import.meta.env.VITE_TINYMCE_API_KEY || '';
 
