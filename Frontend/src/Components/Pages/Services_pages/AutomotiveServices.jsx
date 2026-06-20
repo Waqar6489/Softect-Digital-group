@@ -279,7 +279,7 @@ export default function AutomotiveServices() {
         <div className="bg-[#a442af] text-white rounded-3xl p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl">
           <div className="space-y-2">
             <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Ready to drive more leads & grow your automotive business?</h2>
-            <p className="font-bold text-red-100">More Bookings. More Sales. More Revenue. Book Your Free Lead Generation Strategy Session Today!</p>
+            <p className="font-bold text-purple-100">More Bookings. More Sales. More Revenue. Book Your Free Lead Generation Strategy Session Today!</p>
           </div>
         <Link to="/contact">
            <button className="bg-white text-[#a442af] hover:bg-red-50 font-black uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all whitespace-nowrap shadow-lg">
