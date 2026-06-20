@@ -31,11 +31,11 @@ export default function AutomotiveServices() {
       <section className="max-w-7xl mx-auto px-4 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Heading & Hook */}
         <div className="lg:col-span-7 space-y-6">
-          <span className="text-red-600 font-black text-3xl tracking-tight block">Softech</span>
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none text-slate-900">
+          <span className="text-[#a442af] font-black text-3xl tracking-tight block">Softech</span>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none text-[#122a52]">
             More Leads.<br />
             More Bookings.<br />
-            <span className="text-red-600">More Business.</span>
+            <span className="text-[#a442af]">More Business.</span>
           </h1>
           <p className="text-xl text-slate-700 font-medium max-w-2xl">
             Lead Generation Services for Automotive Businesses (Garages, MOT Centres, Car Sales & Services) 
@@ -52,8 +52,8 @@ export default function AutomotiveServices() {
               "Real-time tracking, reporting & optimization"
             ].map((text, idx) => (
               <div key={idx} className="flex items-center gap-3">
-                <CheckCircle className="text-red-600 flex-shrink-0 w-6 h-6 fill-red-500 text-white" />
-                <span className="font-bold text-slate-800">{text}</span>
+                <CheckCircle className="text-[#a442af] flex-shrink-0 w-6 h-6 fill-[#a442af] text-white" />
+                <span className="font-bold text-[#122a52]">{text}</span>
               </div>
             ))}
           </div>
@@ -61,23 +61,23 @@ export default function AutomotiveServices() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-6">
            <Link to = "/contact"> 
-            <button className="bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
-              <span className="bg-white text-red-600 rounded-full p-1"><Mail size={16} /></span>
+            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
+              <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={16} /></span>
               Contact Us
             </button>
            </Link> 
-            <a href='tel:+92 330 4450030' className="bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
-              <span className="bg-white text-red-600 rounded-full p-1"><Phone size={16} /></span>
+            <a href='tel:+92 330 4450030' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
+              <span className="bg-white text-[#a442af] rounded-full p-1"><Phone size={16} /></span>
               Call Now
             </a>
           </div>
         </div>
 
         {/* Right Column: Lead Form */}
-        <div className="lg:col-span-5 border-4 border-red-600 rounded-2xl p-6 bg-white shadow-xl relative">
+        <div className="lg:col-span-5 border-4 border-[#a442af] rounded-2xl p-6 bg-white shadow-xl relative">
           <div className="text-center mb-6">
-            <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Get More Qualified</h2>
-            <h2 className="text-2xl font-black uppercase tracking-tight text-red-600">Automotive Leads</h2>
+            <h2 className="text-xl font-black uppercase tracking-tight text-[#122a52]">Get More Qualified</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tight text-[#a442af]">Automotive Leads</h2>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -93,7 +93,7 @@ export default function AutomotiveServices() {
               { label: 'Message', id: 'message', type: 'text' },
             ].map((field) => (
               <div key={field.id} className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-gray-400 pb-1">
-                <label htmlFor={field.id} className="font-bold text-sm text-slate-800 sm:w-1/3 whitespace-nowrap">
+                <label htmlFor={field.id} className="font-bold text-sm text-[#122a52] sm:w-1/3 whitespace-nowrap">
                   {field.label}:
                 </label>
                 <input
@@ -107,7 +107,7 @@ export default function AutomotiveServices() {
             ))}
 
             <div className="pt-4 text-center">
-              <button type="submit" className="bg-red-600 hover:bg-red-700 text-white font-black uppercase text-xl px-12 py-3 rounded-full tracking-wider transition-colors shadow-lg w-full sm:w-auto">
+              <button type="submit" className="bg-[#a442af] hover:bg-[#782281] text-white font-black uppercase text-xl px-12 py-3 rounded-full tracking-wider transition-colors shadow-lg w-full sm:w-auto">
                 Get Started
               </button>
             </div>
@@ -120,9 +120,9 @@ export default function AutomotiveServices() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
           
           <div className="lg:col-span-5 p-8 lg:p-12 space-y-6">
-            <h3 className="text-red-600 uppercase font-black tracking-tight text-lg">Helping Automotive Businesses</h3>
-            <h2 className="text-3xl font-black uppercase text-slate-900 leading-tight">
-              Get More Bookings, More Sales, <span className="text-red-600">More Loyal Customers</span>
+            <h3 className="text-[#a442af] uppercase font-black tracking-tight text-lg">Helping Automotive Businesses</h3>
+            <h2 className="text-3xl font-black uppercase text-[#122a52] leading-tight">
+              Get More Bookings, More Sales, <span className="text-[#a442af]">More Loyal Customers</span>
             </h2>
             <p className="text-slate-600 font-medium">
               We help garages, MOT centres and car dealerships generate high-quality leads through Google Ads, Meta Ads, TikTok Ads, and cross-channel strategies.
@@ -131,8 +131,8 @@ export default function AutomotiveServices() {
               Whether you need more MOT bookings, service appointments or car sales enquiries—we build targeted campaigns that bring in customers actively searching for your services.
             </p>
            <Link to="/contact">
-            <button className="bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all">
-              <span className="bg-white text-red-600 rounded-full p-1"><Mail size={14} /></span>
+            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all">
+              <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={14} /></span>
               Contact Us
             </button>
            </Link>  
@@ -141,14 +141,14 @@ export default function AutomotiveServices() {
           <div className="lg:col-span-7 relative h-full min-h-[400px]">
             {/* Background image mockup with overlay text box */}
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?q=80&w=1200&auto=format&fit=crop')` }}>
-              <div className="absolute inset-0 bg-slate-900/20"></div>
+              <div className="absolute inset-0 bg-[#122a52]/2"></div>
             </div>
             
             {/* Overlay card */}
-            <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-96 bg-white p-6 rounded-2xl shadow-2xl border-t-4 border-red-600 space-y-3">
-              <div className="flex items-center gap-2 text-red-600">
-                <div className="bg-red-600 text-white p-2 rounded-full"><ChevronLeft size={18} /></div>
-                <h4 className="font-black uppercase tracking-tight text-sm text-slate-900">Delivering Automotive Leads That Drive Real Results</h4>
+            <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-96 bg-white p-6 rounded-2xl shadow-2xl border-t-4 border-[#a442af] space-y-3">
+              <div className="flex items-center gap-2 text-[#a442af]">
+                <div className="bg-[#a442af] text-white p-2 rounded-full"><ChevronLeft size={18} /></div>
+                <h4 className="font-black uppercase tracking-tight text-sm text-[#122a52]">Delivering Automotive Leads That Drive Real Results</h4>
               </div>
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
                 We deliver high-intent enquiries for MOT bookings, services, repairs, tyre & brake replacements, diagnostics and car sales—helping you keep your bays full and your forecourt busy.
@@ -162,9 +162,9 @@ export default function AutomotiveServices() {
       {/* --- TESTIMONIALS --- */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-8 flex items-center justify-center gap-4">
-          <div className="h-[2px] w-16 bg-red-600"></div>
-          <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900">What Our Clients Say</h2>
-          <div className="h-[2px] w-16 bg-red-600"></div>
+          <div className="h-[2px] w-16 bg-[#a442af]"></div>
+          <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">What Our Clients Say</h2>
+          <div className="h-[2px] w-16 bg-[#a442af]"></div>
         </div>
 
         <div className="relative flex items-center gap-4">
@@ -176,13 +176,13 @@ export default function AutomotiveServices() {
               { quote: "We get consistent service bookings every week. Softech understands our business perfectly.", author: "ProAuto Garage" },
               { quote: "Great car sales leads and test drive enquiries. Our showroom traffic has noticeably improved.", author: "DriveSmart Motors" }
             ].map((t, idx) => (
-              <div key={idx} className="bg-red-600 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between space-y-4">
+              <div key={idx} className="bg-[#a442af] text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between space-y-4">
                 <div className="flex items-center gap-2">
-                  <div className="bg-white text-red-600 rounded-full p-2 w-8 h-8 flex items-center justify-center font-bold">👤</div>
+                  <div className="bg-white text-[#a442af] rounded-full p-2 w-8 h-8 flex items-center justify-center font-bold">👤</div>
                   <div className="text-amber-400 text-lg">★★★★★</div>
                 </div>
                 <p className="font-bold italic text-sm">"{t.quote}"</p>
-                <p className="text-xs uppercase tracking-wider font-black pt-2 border-t border-red-400 text-red-100">— {t.author}</p>
+                <p className="text-xs uppercase tracking-wider font-black pt-2 border-t border-purple-400 text-red-100">— {t.author}</p>
               </div>
             ))}
           </div>
@@ -194,21 +194,21 @@ export default function AutomotiveServices() {
       {/* --- SERVICES MATRIX --- */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-10 flex items-center justify-center gap-4">
-          <div className="h-[2px] w-16 bg-red-600"></div>
-          <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900">Our Automotive Lead Generation Services</h2>
-          <div className="h-[2px] w-16 bg-red-600"></div>
+          <div className="h-[2px] w-16 bg-[#a442af]"></div>
+          <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">Our Automotive Lead Generation Services</h2>
+          <div className="h-[2px] w-16 bg-[#a442af]"></div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 text-center">
           {[
-            { label: "Google Ads for Automotive", icon: <BarChart3 className="text-red-600 mx-auto" size={32} /> },
-            { label: "Meta Ads (Facebook & Instagram)", icon: <div className="flex justify-center text-red-600 gap-1"><FaInstagram size={20}/></div> },
-            { label: "TikTok Advertising Campaigns", icon: <span className="flex justify-center font-black text-xl text-red-600"><FaTiktok size={20}/></span> },
-            { label: "LinkedIn Ads for Car Sales & Fleet", icon: <FaLinkedin className="text-red-600 mx-auto" size={32} /> },
-            { label: "Landing Page CRO & Lead Optimization", icon: <FaPager className="text-red-600 mx-auto" size={32} /> },
-            { label: "Call Tracking & Analytics", icon: <Phone className="text-red-600 mx-auto" size={32} /> },
-            { label: "Remarketing Campaigns", icon: <Target className="text-red-600 mx-auto" size={32} /> },
-            { label: "Cross-Channel Marketing Strategies", icon: <Layers className="text-red-600 mx-auto" size={32} /> },
+            { label: "Google Ads for Automotive", icon: <BarChart3 className="text-[#a442af] mx-auto" size={32} /> },
+            { label: "Meta Ads (Facebook & Instagram)", icon: <div className="flex justify-center text-[#a442af] gap-1"><FaInstagram size={20}/></div> },
+            { label: "TikTok Advertising Campaigns", icon: <span className="flex justify-center font-black text-xl text-[#a442af]"><FaTiktok size={20}/></span> },
+            { label: "LinkedIn Ads for Car Sales & Fleet", icon: <FaLinkedin className="text-[#a442af] mx-auto" size={32} /> },
+            { label: "Landing Page CRO & Lead Optimization", icon: <FaPager className="text-[#a442af] mx-auto" size={32} /> },
+            { label: "Call Tracking & Analytics", icon: <Phone className="text-[#a442af] mx-auto" size={32} /> },
+            { label: "Remarketing Campaigns", icon: <Target className="text-[#a442af] mx-auto" size={32} /> },
+            { label: "Cross-Channel Marketing Strategies", icon: <Layers className="text-[#a442af] mx-auto" size={32} /> },
           ].map((srv, idx) => (
             <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between gap-3">
               <div className="py-2">{srv.icon}</div>
@@ -222,9 +222,9 @@ export default function AutomotiveServices() {
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
           <div className="text-center mb-8 flex items-center justify-center gap-4">
-            <div className="h-[2px] w-16 bg-red-600"></div>
-            <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900">We Solve Automotive Businesses' Growth Challenges</h2>
-            <div className="h-[2px] w-16 bg-red-600"></div>
+            <div className="h-[2px] w-16 bg-[#a442af]"></div>
+            <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">We Solve Automotive Businesses' Growth Challenges</h2>
+            <div className="h-[2px] w-16 bg-[#a442af]"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
@@ -239,20 +239,20 @@ export default function AutomotiveServices() {
               "Difficulty in tracking ROI"
             ].map((challenge, idx) => (
               <div key={idx} className="flex items-center gap-3 py-1">
-                <CheckCircle className="text-red-600 flex-shrink-0 w-5 h-5 fill-red-500 text-white" />
-                <span className="font-bold text-sm text-slate-700">{challenge}</span>
+                <CheckCircle className="flex shrink-0 w-5 h-5 fill-[#a442af] text-white" />
+                <span className="font-bold text-sm text-[#122a52]">{challenge}</span>
               </div>
             ))}
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 pt-8">
           <Link to="/contact"> 
-            <button className="bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
-              <span className="bg-white text-red-600 rounded-full p-1"><Mail size={12} /></span> Contact Us
+            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
+              <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={12} /></span> Contact Us
             </button>
           </Link> 
-            <a href='tel:+92 330 4450030' className="bg-red-600 hover:bg-red-700 text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
-              <span className="bg-white text-red-600 rounded-full p-1"><Phone size={12} /></span> Call Now
+            <a href='tel:+92 330 4450030' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
+              <span className="bg-white text-[#a442af] rounded-full p-1"><Phone size={12} /></span> Call Now
             </a>
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function AutomotiveServices() {
             "Mobile Mechanics", "Fleet Service Providers", "Performance & Tuning Shops"
           ].map((trust, idx) => (
             <div key={idx} className="bg-white px-4 py-2 rounded-lg border text-xs font-black uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-sm flex gap-2 items-center">
-              < FaCarSide className='text-red-600' /> {trust}
+              < FaCarSide className='text-[[#a442af]]' /> {trust}
             </div>
           ))}
         </div>
@@ -276,14 +276,14 @@ export default function AutomotiveServices() {
 
       {/* --- BOTTOM CTA HERO --- */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="bg-red-600 text-white rounded-3xl p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl">
+        <div className="bg-[#a442af] text-white rounded-3xl p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl">
           <div className="space-y-2">
             <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Ready to drive more leads & grow your automotive business?</h2>
             <p className="font-bold text-red-100">More Bookings. More Sales. More Revenue. Book Your Free Lead Generation Strategy Session Today!</p>
           </div>
         <Link to="/contact">
-           <button className="bg-white text-red-600 hover:bg-red-50 font-black uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all whitespace-nowrap shadow-lg">
-            <span className="bg-red-600 text-white rounded-full p-1"><Mail size={16} /></span>
+           <button className="bg-white text-[#a442af] hover:bg-red-50 font-black uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all whitespace-nowrap shadow-lg">
+            <span className="bg-[#a442af] text-white rounded-full p-1"><Mail size={16} /></span>
             Contact Us
            </button>
         </Link>   
