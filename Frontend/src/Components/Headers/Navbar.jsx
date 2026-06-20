@@ -15,6 +15,7 @@ const servicesMenu = [
   { label: "Cross-Platform Apps", path: "/services/crossplatform-app-development" },
   { label: "Emerging App Dev", path: "/services/emerging-app-development" },
   { label: "Artificial Intelligence", path: "/services/artificial-intelligence" },
+  { label: "Automotive", path: "/services/AutomotiveServices" },
 ];
 
 const solutionsMenu = [
