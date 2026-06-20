@@ -20,11 +20,46 @@ CORS(
     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 )
 
-# ─── Data storage ─────────────────────────────────────────────────────────────
+# ─── Data storage (MongoDB Atlas, with local JSON fallback for dev) ──────────
+# Render's free tier wipes the local disk on every restart/redeploy, so JSON
+# files are NOT reliable for production. If MONGO_URI is set, we use MongoDB
+# Atlas (free, persistent). If it's not set (e.g. local dev without Mongo),
+# we transparently fall back to the old JSON-file behavior.
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 
+MONGO_URI = os.getenv('MONGO_URI', '')
+USE_MONGO = bool(MONGO_URI)
+db = None
+
+if USE_MONGO:
+    try:
+        from pymongo import MongoClient
+        _client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        _client.admin.command('ping')  # fail fast if URI/creds are wrong
+        db = _client.get_database('softech')
+        print("MongoDB connected successfully.")
+    except Exception as e:
+        print(f"MongoDB connection failed, falling back to JSON files: {e}")
+        USE_MONGO = False
+        db = None
+
+_COLLECTION_MAP = {
+    'blogs.json': 'blogs',
+    'contacts.json': 'contacts',
+    'quotes.json': 'quotes',
+    'subscribers.json': 'subscribers',
+}
+
 def save_submission(filename, data):
+    if USE_MONGO:
+        try:
+            collection_name = _COLLECTION_MAP.get(filename, filename.replace('.json', ''))
+            db[collection_name].insert_one(dict(data))
+            return
+        except Exception as e:
+            print(f"MongoDB Save Warning: {e}")
+    # JSON fallback
     try:
         filepath = os.path.join(DATA_DIR, filename)
         submissions = []
@@ -40,10 +75,24 @@ def save_submission(filename, data):
     except Exception as e:
         print(f"File Save Warning: {e}")
 
+def _strip_mongo_id(doc):
+    """Remove MongoDB's internal _id (ObjectId isn't JSON-serializable) before returning to the client."""
+    if doc and '_id' in doc:
+        doc = {k: v for k, v in doc.items() if k != '_id'}
+    return doc
+
 def _read_data(filename):
+    if USE_MONGO:
+        try:
+            collection_name = _COLLECTION_MAP.get(filename, filename.replace('.json', ''))
+            docs = list(db[collection_name].find({}))
+            return [_strip_mongo_id(d) for d in docs]
+        except Exception as e:
+            print(f"MongoDB Read Warning: {e}")
+            return []
+    # JSON fallback
     filepath = os.path.join(DATA_DIR, filename)
     if not os.path.exists(filepath):
-        # 🚀 Self-healing step: If Render erased the json file, initialize it safely
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump([], f)
         return []
@@ -54,6 +103,17 @@ def _read_data(filename):
             return []
 
 def _write_data(filename, data):
+    if USE_MONGO:
+        try:
+            collection_name = _COLLECTION_MAP.get(filename, filename.replace('.json', ''))
+            coll = db[collection_name]
+            coll.delete_many({})
+            if data:
+                coll.insert_many([dict(d) for d in data])
+            return
+        except Exception as e:
+            print(f"MongoDB Write Warning: {e}")
+    # JSON fallback
     try:
         filepath = os.path.join(DATA_DIR, filename)
         with open(filepath, 'w', encoding='utf-8') as f:
@@ -71,7 +131,11 @@ def _check_admin():
 # ─── Health check ─────────────────────────────────────────────────────────────
 @app.route('/api/health')
 def health():
-    return jsonify({'status': 'ok', 'timestamp': datetime.utcnow().isoformat()})
+    return jsonify({
+        'status': 'ok',
+        'timestamp': datetime.utcnow().isoformat(),
+        'storage': 'mongodb' if USE_MONGO else 'json-file (not persistent on Render free tier!)'
+    })
 
 # ─── Contact form ─────────────────────────────────────────────────────────────
 @app.route('/api/contact', methods=['POST'])

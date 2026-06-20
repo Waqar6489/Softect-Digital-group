@@ -32,6 +32,7 @@ import { HRM } from './Components/Pages/Solutions_pages/HRM'
 import { Blog } from './Components/Pages/Blog'
 import { BlogPost } from './Components/Pages/BlogPost'
 import { BlogAdmin } from './Components/Pages/BlogAdmin'
+import AutomotiveServices from './Components/Pages/Services_pages/AutomotiveServices'
 
 const WhatsAppButton = () => (
   <a
@@ -91,6 +92,7 @@ function App() {
         <Route path="/services/crossplatform-app-development" element={<CrossPlatformAppDevelopment />} />
         <Route path="/services/emerging-app-development" element={<EmergingAppDevelopment />} />
         <Route path="/services/artificial-intelligence" element={<ArtificialIntelligence />} />
+        <Route path="/services/AutomotiveServices" element={<AutomotiveServices />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/solutions/xdrm" element={<XDRM />} />
         <Route path="/solutions/hrm" element={<HRM />} />
