@@ -21,10 +21,6 @@ CORS(
 )
 
 # ─── Data storage (MongoDB Atlas, with local JSON fallback for dev) ──────────
-# Render's free tier wipes the local disk on every restart/redeploy, so JSON
-# files are NOT reliable for production. If MONGO_URI is set, we use MongoDB
-# Atlas (free, persistent). If it's not set (e.g. local dev without Mongo),
-# we transparently fall back to the old JSON-file behavior.
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -49,6 +45,7 @@ _COLLECTION_MAP = {
     'contacts.json': 'contacts',
     'quotes.json': 'quotes',
     'subscribers.json': 'subscribers',
+    'automotive.json': 'automotive',
 }
 
 def save_submission(filename, data):
@@ -154,10 +151,8 @@ def contact():
         'message': data.get('message', '').strip(),
     }
     
-    # Save user message locally first
     save_submission('contacts.json', submission)
     
-    # 🚀 FIX: Independent email triggering. If email fails, web process STILL passes.
     try:
         _send_notification_email(
             subject=f"[Softech] New Contact: {submission['name']}",
@@ -166,7 +161,6 @@ def contact():
     except Exception as email_err:
         print(f"Non-blocking Notification Error: {email_err}")
         
-    # Always return 200 Success if data reached backend storage safely
     return jsonify({'success': True, 'message': 'Thank you! We will be in touch within 24 hours.'}), 200
 
 # ─── Quote request ────────────────────────────────────────────────────────────
@@ -223,21 +217,25 @@ def admin_quotes():
         return jsonify({'error': 'Unauthorized'}), 401
     return jsonify(_read_data('quotes.json'))
 
+@app.route('/api/admin/automotive')
+def admin_automotive():
+    if not _check_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
+    return jsonify(_read_data('automotive.json'))
+
 
 # ─── JSON File Based Blog Endpoints ───────────────────────────────────────────
-
 @app.route('/api/blogs', methods=['GET'])
 def get_blogs():
     try:
         posts = _read_data('blogs.json')
-        # Check if user is admin, otherwise filter to published posts
         is_admin = _check_admin()
         if not is_admin:
             posts = [p for p in posts if p.get('published', True)]
         return jsonify(posts)
     except Exception as e:
         print(f"Get Blogs Core Crash: {e}")
-        return jsonify([]), 200 # Return empty array instead of 500 error page block
+        return jsonify([]), 200
 
 @app.route('/api/blogs/<slug>', methods=['GET'])
 def get_blog(slug):
@@ -335,6 +333,57 @@ def delete_blog(slug):
     return jsonify({'success': True})
 
 
+# ─── Automotive Leads ─────────────────────────────────────────────────────────
+@app.route('/api/automotive-lead', methods=['POST'])
+def handle_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'businessName': data.get('businessName', '').strip(),
+            'businessType': data.get('businessType', '').strip(),
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        # Save submission across active databases (Persistent on Render)
+        save_submission('automotive.json', submission)
+
+        # Trigger clean non-blocking notification using system engine variables
+        subject = f"🚗 New Automotive Lead: {submission['businessName'] or submission['name']}"
+        body = f"""You have received a new lead from the Automotive Services Landing Page.
+
+--- STEP 1: CONTACT DETAILS ---
+Name: {submission['name']}
+Email: {submission['email']}
+Phone: {submission['phone']}
+Message: {submission['message']}
+
+--- STEP 2: BUSINESS DETAILS ---
+Business Name: {submission['businessName']}
+Business Type: {submission['businessType']}
+Services Offered: {submission['servicesOffered']}
+Location / Area Served: {submission['location']}
+Monthly Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking Automotive Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing automotive lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+
+
 # ─── Email helper ─────────────────────────────────────────────────────────────
 def _send_notification_email(subject, body):
     smtp_host = os.getenv('SMTP_HOST')
@@ -353,7 +402,6 @@ def _send_notification_email(subject, body):
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
         
-        # 🚀 Added clear login handling timeout to prevent production socket freeze
         with smtplib.SMTP(smtp_host, 587, timeout=15) as server:
             server.starttls()
             server.login(smtp_user, smtp_pass)

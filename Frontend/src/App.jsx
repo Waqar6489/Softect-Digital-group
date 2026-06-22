@@ -79,7 +79,7 @@ function App() {
   return (
     <div className="App">
       <ScrollToTop />
-      {!(isAdmin,Automotive) && <Header />}
+      {!(isAdmin || Automotive) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -112,8 +112,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!(isAdmin,Automotive) && <Footer />}
-      {!(isAdmin,Automotive) && <WhatsAppButton />}
+      {!(isAdmin || Automotive) && <Footer />}
+      {!(isAdmin || Automotive) && <WhatsAppButton />}
     </div>
   )
 }

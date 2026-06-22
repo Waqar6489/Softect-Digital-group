@@ -97,5 +97,16 @@
     "budget": "$15,000 \u2013 $50,000",
     "timeline": "3 \u2013 6 Months",
     "description": "testing new"
+  },
+  {
+    "timestamp": "2026-06-22T10:41:42.500069",
+    "name": "Waqar ali",
+    "email": "waqarali6489@gmail.com",
+    "phone": "3186965159",
+    "company": "Softech Digital Group | UK",
+    "service": "Mobile App",
+    "budget": "$15,000 \u2013 $50,000",
+    "timeline": "3 \u2013 6 Months",
+    "description": "testing"
   }
 ]

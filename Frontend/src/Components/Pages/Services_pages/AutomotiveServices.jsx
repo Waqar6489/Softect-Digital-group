@@ -5,22 +5,80 @@ import { Link } from 'react-router-dom';
 import Logo from '../../Headers/logo';
 
 export default function AutomotiveServices() {
+  const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
+  const VITE_API = import.meta.env.VITE_API_URL
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    message: '',
     businessName: '',
     businessType: '',
     servicesOffered: '',
     location: '',
-    budget: '',
-    message: ''
+    budget: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleNextStep = (e) => {
     e.preventDefault();
-    console.log('Form Submitted:', formData);
-    // Handle form submission logic here
+    if (!formData.email || !formData.phone) {
+      alert("Please fill out your Email, and Phone to move forward.");
+      return;
+    }
+    setStep(2);
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const apiBase = VITE_API || '';
+      const response = await fetch(`${apiBase}/api/automotive-lead`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server returned status code: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setSubmitStatus('success');
+        
+        // Clear all input text fields gracefully
+        setFormData({
+          name: '', email: '', phone: '', message: '',
+          businessName: '', businessType: '', servicesOffered: '', location: '', budget: ''
+        });
+        setStep(1);
+        
+        // ⏱️ Fix: Reset the status banner state after 2.5 seconds
+        setTimeout(() => {
+          setSubmitStatus(null);
+        }, 3500);
+
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false); // Clean termination of form state flow
+    }
   };
 
   return (
@@ -30,7 +88,7 @@ export default function AutomotiveServices() {
       <section className="max-w-7xl mx-auto px-4 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Heading & Hook */}
         <div className="lg:col-span-7 space-y-6">
-          <span className="  block"><Logo/></span>
+          <span className="block"><Logo/></span>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none text-[#122a52]">
             More Leads.<br />
             More Bookings.<br />
@@ -59,12 +117,10 @@ export default function AutomotiveServices() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-6">
-           
             <a href='#form' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md md:hidden">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={16} /></span>
               Contact Us
             </a>
-          
             <a href='tel:+92 330 4450030' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Phone size={16} /></span>
               Call Now
@@ -72,48 +128,108 @@ export default function AutomotiveServices() {
           </div>
         </div>
 
-        {/* Right Column: Lead Form */}
+        {/* Right Column: 2-Step Lead Form */}
         <div id='form' className="lg:col-span-5 border-4 border-[#a442af] rounded-2xl p-6 bg-white shadow-xl relative">
-          <div className="text-center mb-6">
+          
+          <div className="text-center mb-6 pt-2">
             <h2 className="text-xl font-black uppercase tracking-tight text-[#122a52]">Get More Qualified</h2>
             <h2 className="text-2xl font-black uppercase tracking-tight text-[#a442af]">Automotive Leads</h2>
           </div>
           
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {[
-              { label: 'Name', id: 'name', type: 'text' },
-              { label: 'Email', id: 'email', type: 'email' },
-              { label: 'Phone', id: 'phone', type: 'tel' },
-              { label: 'Business Name', id: 'businessName', type: 'text' },
-              { label: 'Business Type', id: 'businessType', type: 'text', placeholder: 'Garage / MOT Centre / Car Sales' },
-              { label: 'Services Offered', id: 'servicesOffered', type: 'text' },
-              { label: 'Location / Area Served', id: 'location', type: 'text' },
-              { label: 'Monthly Ad Budget', id: 'budget', type: 'text' },
-              { label: 'Message', id: 'message', type: 'text' },
-            ].map((field) => (
-              <div key={field.id} className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-gray-400 pb-1">
-                <label htmlFor={field.id} className="font-bold text-sm text-[#122a52] sm:w-1/3 whitespace-nowrap">
-                  {field.label}:
-                </label>
-                <input
-                  type={field.type}
-                  id={field.id}
-                  placeholder={field.placeholder || ''}
-                  className="w-full bg-transparent border-none focus:ring-0 text-sm py-1 px-2 outline-none text-slate-700"
-                  onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
-                />
-              </div>
-            ))}
-
-            <div className="pt-4 text-center">
-              <button type="submit" className="bg-[#a442af] hover:bg-[#782281] text-white font-black uppercase text-xl px-12 py-3 rounded-full tracking-wider transition-colors shadow-lg w-full sm:w-auto">
-                Get Started
-              </button>
+          {submitStatus === 'success' && (
+            <div className="bg-green-100 text-green-800 p-4 rounded-xl text-center font-bold mb-4">
+              Thanks you for Submition. we will respond within 24 hours.
             </div>
+          )}
+          {submitStatus === 'error' && (
+            <div className="bg-red-100 text-red-800 p-4 rounded-xl text-center font-bold mb-4">
+              Something went wrong. Please check fields or Call Us!
+            </div>
+          )}
+
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+            {/* STEP 1 */}
+            {step === 1 && (
+              <div className="space-y-4">
+                {[
+                  { label: 'Name', id: 'name', type: 'text' },
+                  { label: 'Email', id: 'email', type: 'email' },
+                  { label: 'Phone', id: 'phone', type: 'tel' },
+                ].map((field) => (
+                  <div key={field.id} className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-gray-400 pb-1">
+                    <label htmlFor={field.id} className="font-bold text-sm text-[#122a52] sm:w-1/3 whitespace-nowrap">
+                      {field.label}:
+                    </label>
+                    <input
+                      type={field.type}
+                      id={field.id}
+                      value={formData[field.id]}
+                      className="w-full bg-transparent border-none focus:ring-0 text-sm py-1 px-2 outline-none text-slate-700"
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                ))}
+
+                {/* Message Field Custom Textured Box Layout */}
+                <div className="flex flex-col gap-1 pt-2">
+                  <label htmlFor="message" className="font-bold text-sm text-[#122a52]">
+                    Message:
+                  </label>
+                  <textarea
+                    id="message"
+                    rows="4"
+                    value={formData.message}
+                    placeholder="Write your custom requirements here..."
+                    className="w-full p-3 rounded-xl border border-gray-400 bg-transparent focus:ring-1 focus:ring-[#a442af] focus:border-[#a442af] text-sm outline-none text-slate-700 resize-none"
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="pt-4 text-center">
+                  <button type="button" onClick={handleNextStep} className="bg-[#a442af] hover:bg-[#782281] text-white font-black uppercase text-xl px-12 py-3 rounded-full tracking-wider transition-colors shadow-lg w-full sm:w-auto">
+                    Get Started
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2 */}
+            {step === 2 && (
+              <div className="space-y-4">
+                {[
+                  { label: 'Business Name', id: 'businessName', type: 'text' },
+                  { label: 'Business Type', id: 'businessType', type: 'text', placeholder: 'Garage / MOT Centre / Car Sales' },
+                  { label: 'Services Offered', id: 'servicesOffered', type: 'text' },
+                  { label: 'Location / Area Served', id: 'location', type: 'text' },
+                  { label: 'Monthly Ad Budget', id: 'budget', type: 'number' },
+                ].map((field) => (
+                  <div key={field.id} className="flex flex-col sm:flex-row sm:items-center gap-2 border-b border-gray-400 pb-1">
+                    <label htmlFor={field.id} className="font-bold text-sm text-[#122a52] sm:w-1/3 whitespace-nowrap">
+                      {field.label}:
+                    </label>
+                    <input
+                      type={field.type}
+                      id={field.id}
+                      value={formData[field.id]}
+                      placeholder={field.placeholder || ''}
+                      className="w-full bg-transparent border-none focus:ring-0 text-sm py-1 px-2 outline-none text-slate-700"
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                ))}
+                <div className="pt-4 flex items-center justify-center gap-4">
+                  <button type="button" onClick={() => setStep(1)} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold uppercase text-sm px-6 py-3 rounded-full transition-colors">
+                    Back
+                  </button>
+                  <button type="button" onClick={handleSubmit} disabled={isSubmitting} className="bg-[#a442af] hover:bg-[#782281] text-white font-black uppercase text-xl px-12 py-3 rounded-full tracking-wider transition-colors shadow-lg flex-1">
+                    {isSubmitting ? 'Sending...' : 'Submit'}
+                  </button>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </section>
-
       {/* --- INFOGRAPHIC / VALUE PROP SECTION --- */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
