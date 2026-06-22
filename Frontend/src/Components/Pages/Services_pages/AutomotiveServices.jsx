@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Phone, Mail, ChevronLeft, ChevronRight, BarChart3, Target, Layers } from 'lucide-react';
 import { FaTiktok,FaFacebookF,FaLinkedin,FaPager, FaInstagram, FaCarSide  } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-
-
+import Logo from '../../Headers/logo';
 
 export default function AutomotiveServices() {
   const [formData, setFormData] = useState({
@@ -31,7 +30,7 @@ export default function AutomotiveServices() {
       <section className="max-w-7xl mx-auto px-4 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Heading & Hook */}
         <div className="lg:col-span-7 space-y-6">
-          <span className="text-[#a442af] font-black text-3xl tracking-tight block">Softech</span>
+          <span className="  block"><Logo/></span>
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-none text-[#122a52]">
             More Leads.<br />
             More Bookings.<br />
@@ -60,12 +59,12 @@ export default function AutomotiveServices() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-6">
-           <Link to = "/contact"> 
-            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
+           
+            <a href='#form' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md md:hidden">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={16} /></span>
               Contact Us
-            </button>
-           </Link> 
+            </a>
+          
             <a href='tel:+92 330 4450030' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all shadow-md">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Phone size={16} /></span>
               Call Now
@@ -74,7 +73,7 @@ export default function AutomotiveServices() {
         </div>
 
         {/* Right Column: Lead Form */}
-        <div className="lg:col-span-5 border-4 border-[#a442af] rounded-2xl p-6 bg-white shadow-xl relative">
+        <div id='form' className="lg:col-span-5 border-4 border-[#a442af] rounded-2xl p-6 bg-white shadow-xl relative">
           <div className="text-center mb-6">
             <h2 className="text-xl font-black uppercase tracking-tight text-[#122a52]">Get More Qualified</h2>
             <h2 className="text-2xl font-black uppercase tracking-tight text-[#a442af]">Automotive Leads</h2>
@@ -128,14 +127,14 @@ export default function AutomotiveServices() {
               We help garages, MOT centres and car dealerships generate high-quality leads through Google Ads, Meta Ads, TikTok Ads, and cross-channel strategies.
             </p>
             <p className="text-slate-600 font-medium">
-              Whether you need more MOT bookings, service appointments or car sales enquiries—we build targeted campaigns that bring in customers actively searching for your services.
+              Whether you need more MOT bookings, service appointments or car sales enquiries, we build targeted campaigns that bring in customers actively searching for your services.
             </p>
-           <Link to="/contact">
-            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all">
+           
+            <a href='#form' className="bg-[#a442af] w-49 hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={14} /></span>
               Contact Us
-            </button>
-           </Link>  
+            </a>
+            
           </div>
 
           <div className="lg:col-span-7 relative h-full min-h-[400px]">
@@ -246,11 +245,11 @@ export default function AutomotiveServices() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 pt-8">
-          <Link to="/contact"> 
-            <button className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
+          
+            <a href='#form' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Mail size={12} /></span> Contact Us
-            </button>
-          </Link> 
+            </a>
+          
             <a href='tel:+92 330 4450030' className="bg-[#a442af] hover:bg-[#782281] text-white font-extrabold uppercase px-6 py-3 rounded-full flex items-center gap-2 transition-all text-sm">
               <span className="bg-white text-[#a442af] rounded-full p-1"><Phone size={12} /></span> Call Now
             </a>
@@ -281,12 +280,12 @@ export default function AutomotiveServices() {
             <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight">Ready to drive more leads & grow your automotive business?</h2>
             <p className="font-bold text-purple-100">More Bookings. More Sales. More Revenue. Book Your Free Lead Generation Strategy Session Today!</p>
           </div>
-        <Link to="/contact">
-           <button className="bg-white text-[#a442af] hover:bg-red-50 font-black uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all whitespace-nowrap shadow-lg">
+        
+           <a href='#form' className="bg-white text-[#a442af] hover:bg-purple-50 font-black uppercase px-8 py-4 rounded-full flex items-center gap-2 transition-all whitespace-nowrap shadow-lg">
             <span className="bg-[#a442af] text-white rounded-full p-1"><Mail size={16} /></span>
             Contact Us
-           </button>
-        </Link>   
+           </a>
+          
         </div>
       </section>
     </div>

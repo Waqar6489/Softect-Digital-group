@@ -74,11 +74,12 @@ const WhatsAppButton = () => (
 function App() {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/blog-admin';
+  const Automotive = pathname === '/services/AutomotiveServices';
 
   return (
     <div className="App">
       <ScrollToTop />
-      {!isAdmin && <Header />}
+      {!(isAdmin,Automotive) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -111,8 +112,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!isAdmin && <Footer />}
-      <WhatsAppButton />
+      {!(isAdmin,Automotive) && <Footer />}
+      {!(isAdmin,Automotive) && <WhatsAppButton />}
     </div>
   )
 }

@@ -15,7 +15,7 @@ export const Footer = () => {
         <div className='flex flex-col gap-4 w-full max-w-xs'>
           <Logo dark={true} />
           <p className='text-sm text-[#adb4b4] leading-relaxed'>
-            Building world-class digital products since 2015. Pakistan's #1 software house.
+            Building world-class digital products since 2024. Pakistan's #1 software house.
           </p>
           <div className='flex gap-3 mt-2'>
             {[
