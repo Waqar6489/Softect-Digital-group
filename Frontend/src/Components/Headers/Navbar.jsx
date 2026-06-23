@@ -16,6 +16,7 @@ const servicesMenu = [
   { label: "Emerging App Dev", path: "/services/emerging-app-development" },
   { label: "Artificial Intelligence", path: "/services/artificial-intelligence" },
   { label: "Automotive", path: "/services/AutomotiveServices" },
+  { label: "Beauty Solon", path: "/services/BeautySolonServices" },
 ];
 
 const solutionsMenu = [

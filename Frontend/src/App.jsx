@@ -33,6 +33,7 @@ import { Blog } from './Components/Pages/Blog'
 import { BlogPost } from './Components/Pages/BlogPost'
 import { BlogAdmin } from './Components/Pages/BlogAdmin'
 import AutomotiveServices from './Components/Pages/External_Services/AutomotiveServices'
+import BeautySalonServices from './Components/Pages/External_Services/BeautySolonServices'
 
 const WhatsAppButton = () => (
   <a
@@ -75,11 +76,12 @@ function App() {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/blog-admin';
   const Automotive = pathname === '/services/AutomotiveServices';
+  const Beauty = pathname === '/services/BeautySolonServices';
 
   return (
     <div className="App">
       <ScrollToTop />
-      {!(isAdmin || Automotive) && <Header />}
+      {!(isAdmin || Automotive || Beauty ) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -94,6 +96,7 @@ function App() {
         <Route path="/services/emerging-app-development" element={<EmergingAppDevelopment />} />
         <Route path="/services/artificial-intelligence" element={<ArtificialIntelligence />} />
         <Route path="/services/AutomotiveServices" element={<AutomotiveServices />} />
+        <Route path="/services/BeautySolonServices" element={<BeautySalonServices />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/solutions/xdrm" element={<XDRM />} />
         <Route path="/solutions/hrm" element={<HRM />} />
@@ -112,8 +115,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!(isAdmin || Automotive) && <Footer />}
-      {!(isAdmin || Automotive) && <WhatsAppButton />}
+      {!(isAdmin || Automotive || Beauty ) && <Footer />}
+      {!(isAdmin || Automotive || Beauty ) && <WhatsAppButton />}
     </div>
   )
 }

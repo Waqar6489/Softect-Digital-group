@@ -439,6 +439,24 @@ export default function AutomotiveServices() {
           
         </div>
       </section>
+
+      {/* --- FOOTER BANNER --- */}
+      <footer className="bg-[#122a52] text-white text-xs py-4 px-4 font-medium">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 text-center">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-slate-300">
+            <span className="font-bold text-white">🛡️ Digital Marketing Lead Generation Experts</span>
+            <span>|</span>
+            <span>Google Ads</span>
+            <span>|</span>
+            <span>Meta Ads</span>
+            <span>|</span>
+            <span>TikTok Ads</span>
+            <span>|</span>
+            <span>Cross-Channel Marketing</span>
+          </div>
+          <p className="text-slate-400">© 2026 Softech Digital Group. All Rights Reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

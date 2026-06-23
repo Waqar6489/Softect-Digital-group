@@ -88,8 +88,8 @@ const Services = () => {
 
       {/* ================= SERVICES ================= */}
       <section className="py-10 px-3 md:px-10 bg-[#fdf9ff] lg:p-30">
-        <div className="w-full flex flex-col gap-4 items-center mb-10">
-          <h2 className="text-3xl md:text-4xl text-[#122a52] font-bold  ">
+        <div className="w-full flex flex-col gap-4 justify-center items-center mb-10">
+          <h2 className="text-3xl text-center md:text-4xl text-[#122a52] font-bold  ">
             Our <span className="text-[#a442af]">Full Spectrum</span> of Services
           </h2>
         </div>

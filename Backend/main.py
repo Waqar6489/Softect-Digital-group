@@ -40,12 +40,14 @@ if USE_MONGO:
         USE_MONGO = False
         db = None
 
+# ✨ Added 'beauty.json' mapping here
 _COLLECTION_MAP = {
     'blogs.json': 'blogs',
     'contacts.json': 'contacts',
     'quotes.json': 'quotes',
     'subscribers.json': 'subscribers',
     'automotive.json': 'automotive',
+    'beauty.json': 'beauty',
 }
 
 def save_submission(filename, data):
@@ -223,6 +225,12 @@ def admin_automotive():
         return jsonify({'error': 'Unauthorized'}), 401
     return jsonify(_read_data('automotive.json'))
 
+@app.route('/api/admin/beauty')
+def admin_beauty():
+    if not _check_admin():
+        return jsonify({'error': 'Unauthorized'}), 401
+    return jsonify(_read_data('beauty.json'))
+
 
 # ─── JSON File Based Blog Endpoints ───────────────────────────────────────────
 @app.route('/api/blogs', methods=['GET'])
@@ -352,10 +360,8 @@ def handle_lead():
             'budget': data.get('budget', '').strip()
         }
 
-        # Save submission across active databases (Persistent on Render)
         save_submission('automotive.json', submission)
 
-        # Trigger clean non-blocking notification using system engine variables
         subject = f"🚗 New Automotive Lead: {submission['businessName'] or submission['name']}"
         body = f"""You have received a new lead from the Automotive Services Landing Page.
 
@@ -381,6 +387,58 @@ Monthly Ad Budget: {submission['budget']}"""
 
     except Exception as e:
         print(f"Error processing automotive lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+
+
+# ─── ✨ New: Beauty & Salon Leads EndPoint ──────────────────────────────────────
+@app.route('/api/beauty-lead', methods=['POST'])
+def handle_beauty_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        # Validation for required fields
+        for field in ['name', 'email', 'phone']:
+            if not data.get(field):
+                return jsonify({"status": "error", "message": f"Missing required field: {field}"}), 400
+
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'businessName': data.get('businessName', '').strip() or 'N/A',
+            'servicesOffered': data.get('servicesOffered', '').strip() or 'N/A',
+            'message': data.get('message', '').strip() or 'N/A'
+        }
+
+        # Save submission across active databases (Persistent on Atlas/Dev)
+        save_submission('beauty.json', submission)
+
+        # Trigger clean non-blocking notification email
+        subject = f"💇 New Beauty & Salon Lead: {submission['businessName'] or submission['name']}"
+        body = f"""You have received a new lead from the Beauty & Salons Landing Page.
+
+--- CONTACT DETAILS ---
+Name: {submission['name']}
+Email: {submission['email']}
+Phone: {submission['phone']}
+
+--- BUSINESS DETAILS ---
+Salon/Clinic Name: {submission['businessName']}
+Services Offered: {submission['servicesOffered']}
+
+--- MESSAGE ---
+Message: {submission['message']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking Beauty Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing beauty lead: {str(e)}")
         return jsonify({"status": "error", "message": "Internal server error."}), 500
 
 
