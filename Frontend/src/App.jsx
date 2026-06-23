@@ -32,7 +32,7 @@ import { HRM } from './Components/Pages/Solutions_pages/HRM'
 import { Blog } from './Components/Pages/Blog'
 import { BlogPost } from './Components/Pages/BlogPost'
 import { BlogAdmin } from './Components/Pages/BlogAdmin'
-import AutomotiveServices from './Components/Pages/Services_pages/AutomotiveServices'
+import AutomotiveServices from './Components/Pages/External_Services/AutomotiveServices'
 
 const WhatsAppButton = () => (
   <a

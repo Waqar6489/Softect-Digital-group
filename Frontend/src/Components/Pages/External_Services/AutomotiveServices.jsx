@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { CheckCircle, Phone, Mail, ChevronLeft, ChevronRight, BarChart3, Target, Layers } from 'lucide-react';
 import { FaTiktok,FaFacebookF,FaLinkedin,FaPager, FaInstagram, FaCarSide  } from "react-icons/fa";
-import { Link } from 'react-router-dom';
 import Logo from '../../Headers/logo';
 
+
 export default function AutomotiveServices() {
+    const trustItems = [
+    "Garages & Auto Repair Shops", 
+    "MOT Testing Centres", 
+    "Tyre & Brake Specialists", 
+    "Car Dealerships (New & Used)", 
+    "Bodyshops & Collision Centres", 
+    "Mobile Mechanics", 
+    "Fleet Service Providers", 
+    "Performance & Tuning Shops"
+  ];
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -277,11 +287,12 @@ export default function AutomotiveServices() {
       {/* --- TESTIMONIALS --- */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-8 flex items-center justify-center gap-4">
-          <div className="h-[2px] w-16 bg-[#a442af]"></div>
+          <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
           <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">What Our Clients Say</h2>
-          <div className="h-[2px] w-16 bg-[#a442af]"></div>
-        </div>
+          <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
 
+        </div>
+        
         <div className="relative flex items-center gap-4">
           {/* <button className="p-2 bg-white rounded-full shadow border hover:bg-gray-100 hidden md:block"><ChevronLeft size={24}/></button> */}
           
@@ -309,9 +320,9 @@ export default function AutomotiveServices() {
       {/* --- SERVICES MATRIX --- */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-10 flex items-center justify-center gap-4">
-          <div className="h-[2px] w-16 bg-[#a442af]"></div>
+          <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
           <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">Our Automotive Lead Generation Services</h2>
-          <div className="h-[2px] w-16 bg-[#a442af]"></div>
+          <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 text-center">
@@ -337,9 +348,9 @@ export default function AutomotiveServices() {
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
           <div className="text-center mb-8 flex items-center justify-center gap-4">
-            <div className="h-[2px] w-16 bg-[#a442af]"></div>
+            <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
             <h2 className="text-2xl font-black uppercase tracking-tight text-[#122a52]">We Solve Automotive Businesses' Growth Challenges</h2>
-            <div className="h-[2px] w-16 bg-[#a442af]"></div>
+           <div className="hidden sm:block h-[2px] w-16 bg-[#a442af]"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
@@ -375,20 +386,44 @@ export default function AutomotiveServices() {
 
       {/* --- TRUSTED BY SLIDER --- */}
       <section className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <h3 className="text-slate-800 uppercase font-black text-sm tracking-widest mb-6">Trusted By Automotive Businesses</h3>
-        <div className="flex items-center justify-center gap-6 overflow-x-auto py-2 no-scrollbar">
-          {[
-            "Garages & Auto Repair Shops", "MOT Testing Centres", "Tyre & Brake Specialists", 
-            "Car Dealerships (New & Used)", "Bodyshops & Collision Centres", 
-            "Mobile Mechanics", "Fleet Service Providers", "Performance & Tuning Shops"
-          ].map((trust, idx) => (
-            <div key={idx} className="bg-white px-4 py-2 rounded-lg border text-xs font-black uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-sm flex gap-2 items-center">
-              < FaCarSide className='text-[[#a442af]]' /> {trust}
+      {/* Dynamic Keyframe Animation for Auto-Scroll */}
+      <style>{`
+        @keyframes marquee-trusted {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee-trusted {
+          display: flex;
+          width: max-content;
+          animation: marquee-trusted 30s linear infinite;
+        }
+        .animate-marquee-trusted:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      <h3 className="text-slate-800 uppercase font-black text-sm tracking-widest mb-6">
+        Trusted By Automotive Businesses
+      </h3>
+      
+      {/* Container holding the marquee */}
+      <div className="relative w-full overflow-hidden py-2">
+        <div className="animate-marquee-trusted gap-6">
+          {/* First loop of items */}
+          {trustItems.map((trust, idx) => (
+            <div key={`orig-${idx}`} className="bg-white px-4 py-2 rounded-lg border text-xs font-black uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-sm flex gap-2 items-center">
+              <FaCarSide className="text-[#a442af]" /> {trust}
+            </div>
+          ))}
+          {/* Duplicated loop for infinite fluid effect */}
+          {trustItems.map((trust, idx) => (
+            <div key={`dup-${idx}`} className="bg-white px-4 py-2 rounded-lg border text-xs font-black uppercase tracking-wider text-slate-600 whitespace-nowrap shadow-sm flex gap-2 items-center">
+              <FaCarSide className="text-[#a442af]" /> {trust}
             </div>
           ))}
         </div>
-      </section>
-
+      </div>
+    </section>
       {/* --- BOTTOM CTA HERO --- */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
         <div className="bg-[#a442af] text-white rounded-3xl p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl">
