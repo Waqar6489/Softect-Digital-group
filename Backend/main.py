@@ -12,7 +12,7 @@ load_dotenv()
 
 app = Flask(__name__, static_folder='../Frontend/dist', static_url_path='')
 
-# 🚀 Stronger CORS configuration to handle production headers safely
+# Stronger CORS configuration to handle production headers safely
 CORS(
     app,
     origins="*",
@@ -365,18 +365,18 @@ def handle_lead():
         subject = f"🚗 New Automotive Lead: {submission['businessName'] or submission['name']}"
         body = f"""You have received a new lead from the Automotive Services Landing Page.
 
---- STEP 1: CONTACT DETAILS ---
-Name: {submission['name']}
-Email: {submission['email']}
-Phone: {submission['phone']}
-Message: {submission['message']}
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
 
---- STEP 2: BUSINESS DETAILS ---
-Business Name: {submission['businessName']}
-Business Type: {submission['businessType']}
-Services Offered: {submission['servicesOffered']}
-Location / Area Served: {submission['location']}
-Monthly Ad Budget: {submission['budget']}"""
+        --- STEP 2: BUSINESS DETAILS ---
+        Business Name: {submission['businessName']}
+        Business Type: {submission['businessType']}
+        Services Offered: {submission['servicesOffered']}
+        Location / Area Served: {submission['location']}
+        Monthly Ad Budget: {submission['budget']}"""
 
         try:
             _send_notification_email(subject=subject, body=body)
@@ -397,7 +397,7 @@ def handle_beauty_lead():
         data = request.get_json(force=True)
         
         # Validation for required fields
-        for field in ['name', 'email', 'phone']:
+        for field in ['email', 'phone']:
             if not data.get(field):
                 return jsonify({"status": "error", "message": f"Missing required field: {field}"}), 400
 
@@ -418,17 +418,17 @@ def handle_beauty_lead():
         subject = f"💇 New Beauty & Salon Lead: {submission['businessName'] or submission['name']}"
         body = f"""You have received a new lead from the Beauty & Salons Landing Page.
 
---- CONTACT DETAILS ---
-Name: {submission['name']}
-Email: {submission['email']}
-Phone: {submission['phone']}
+        --- CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
 
---- BUSINESS DETAILS ---
-Salon/Clinic Name: {submission['businessName']}
-Services Offered: {submission['servicesOffered']}
+        --- BUSINESS DETAILS ---
+        Salon/Clinic Name: {submission['businessName']}
+        Services Offered: {submission['servicesOffered']}
 
---- MESSAGE ---
-Message: {submission['message']}"""
+        --- MESSAGE ---
+        Message: {submission['message']}"""
 
         try:
             _send_notification_email(subject=subject, body=body)
@@ -441,6 +441,55 @@ Message: {submission['message']}"""
         print(f"Error processing beauty lead: {str(e)}")
         return jsonify({"status": "error", "message": "Internal server error."}), 500
 
+
+# ─── Automotive Leads ─────────────────────────────────────────────────────────
+@app.route('/api/cleaning-lead', methods=['POST'])
+def handle_Clean_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'businessName': data.get('businessName', '').strip(),
+            'businessType': data.get('businessType', '').strip(),
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('cleaning.json', submission)
+
+        subject = f"🧹 New Cleaning Lead: {submission['businessName'] or submission['name']}"
+        body = f"""You have received a new lead from the Cleaning Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Business Name: {submission['businessName']}
+        Business Type: {submission['businessType']}
+        Services Offered: {submission['servicesOffered']}
+        Location / Area Served: {submission['location']}
+        Monthly Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking Cleaning Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing cleaning lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
 
 # ─── Email helper ─────────────────────────────────────────────────────────────
 def _send_notification_email(subject, body):

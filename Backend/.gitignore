@@ -1,4 +1,8 @@
 .env
+data/
+!blogs.json
+!contacts.json
+!quotes.json
 __pycache__/
 *.pyc
 .venv/

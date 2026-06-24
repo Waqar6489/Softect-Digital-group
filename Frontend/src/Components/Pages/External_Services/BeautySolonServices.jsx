@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Phone, Mail, ChevronLeft, ChevronRight, BarChart3, Target, Layers } from 'lucide-react';
 import { FaTiktok, FaFacebookF, FaLinkedin, FaPager, FaInstagram, FaCrown } from "react-icons/fa";
 import { GiBarbarian } from "react-icons/gi";
+
 import Logo from '../../Headers/logo';
 
 

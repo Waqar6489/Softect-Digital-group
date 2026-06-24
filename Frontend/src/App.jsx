@@ -34,6 +34,7 @@ import { BlogPost } from './Components/Pages/BlogPost'
 import { BlogAdmin } from './Components/Pages/BlogAdmin'
 import AutomotiveServices from './Components/Pages/External_Services/AutomotiveServices'
 import BeautySalonServices from './Components/Pages/External_Services/BeautySolonServices'
+import CleaningServices from './Components/Pages/External_Services/CleaningServices'
 
 const WhatsAppButton = () => (
   <a
@@ -77,11 +78,12 @@ function App() {
   const isAdmin = pathname === '/blog-admin';
   const Automotive = pathname === '/services/AutomotiveServices';
   const Beauty = pathname === '/services/BeautySolonServices';
+  const Clean = pathname === '/services/CleaningServices';
 
   return (
     <div className="App">
       <ScrollToTop />
-      {!(isAdmin || Automotive || Beauty ) && <Header />}
+      {!(isAdmin || Automotive || Beauty || Clean ) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -97,6 +99,7 @@ function App() {
         <Route path="/services/artificial-intelligence" element={<ArtificialIntelligence />} />
         <Route path="/services/AutomotiveServices" element={<AutomotiveServices />} />
         <Route path="/services/BeautySolonServices" element={<BeautySalonServices />} />
+        <Route path="/services/CleaningServices" element={<CleaningServices />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/solutions/xdrm" element={<XDRM />} />
         <Route path="/solutions/hrm" element={<HRM />} />
@@ -115,8 +118,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!(isAdmin || Automotive || Beauty ) && <Footer />}
-      {!(isAdmin || Automotive || Beauty ) && <WhatsAppButton />}
+      {!(isAdmin || Automotive || Beauty || Clean ) && <Footer />}
+      {!(isAdmin || Automotive || Beauty || Clean ) && <WhatsAppButton />}
     </div>
   )
 }
