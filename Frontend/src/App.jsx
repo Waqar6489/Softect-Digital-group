@@ -35,6 +35,9 @@ import { BlogAdmin } from './Components/Pages/BlogAdmin'
 import AutomotiveServices from './Components/Pages/External_Services/AutomotiveServices'
 import BeautySalonServices from './Components/Pages/External_Services/BeautySolonServices'
 import CleaningServices from './Components/Pages/External_Services/CleaningServices'
+import ConstructionLandingPage from './Components/Pages/External_Services/ConstructionServices'
+import DentalLandingPage from './Components/Pages/External_Services/DentalServices'
+import DigitalMarketingLandingPage from './Components/Pages/External_Services/DigitalMarketingServices'
 
 const WhatsAppButton = () => (
   <a
@@ -76,14 +79,19 @@ const WhatsAppButton = () => (
 function App() {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/blog-admin';
-  const Automotive = pathname === '/services/AutomotiveServices';
-  const Beauty = pathname === '/services/BeautySolonServices';
-  const Clean = pathname === '/services/CleaningServices';
+  const Automotive = pathname === '/services/automotive-services';
+  const Beauty = pathname === '/services/beauty-solon-services';
+  const Clean = pathname === '/services/cleaning-services';
+  const Construct = pathname === '/services/construction-services';
+  const Dental = pathname === '/services/dental-services';
+  const Marketing = pathname === '/services/digital-marketing-services';
+
+ 
 
   return (
     <div className="App">
       <ScrollToTop />
-      {!(isAdmin || Automotive || Beauty || Clean ) && <Header />}
+      {!(isAdmin || Automotive || Beauty || Clean  || Construct || Dental || Marketing ) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -97,9 +105,12 @@ function App() {
         <Route path="/services/crossplatform-app-development" element={<CrossPlatformAppDevelopment />} />
         <Route path="/services/emerging-app-development" element={<EmergingAppDevelopment />} />
         <Route path="/services/artificial-intelligence" element={<ArtificialIntelligence />} />
-        <Route path="/services/AutomotiveServices" element={<AutomotiveServices />} />
-        <Route path="/services/BeautySolonServices" element={<BeautySalonServices />} />
-        <Route path="/services/CleaningServices" element={<CleaningServices />} />
+        <Route path="/services/automotive-services" element={<AutomotiveServices />} />
+        <Route path="/services/beauty-solon-services" element={<BeautySalonServices />} />
+        <Route path="/services/cleaning-services" element={<CleaningServices />} />
+        <Route path="/services/construction-services" element={<ConstructionLandingPage />} />
+        <Route path="/services/dental-services" element={<DentalLandingPage />} />
+        <Route path="/services/digital-marketing-services" element={<DigitalMarketingLandingPage />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/solutions/xdrm" element={<XDRM />} />
         <Route path="/solutions/hrm" element={<HRM />} />
@@ -118,8 +129,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!(isAdmin || Automotive || Beauty || Clean ) && <Footer />}
-      {!(isAdmin || Automotive || Beauty || Clean ) && <WhatsAppButton />}
+      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing) && <Footer />}
+      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing) && <WhatsAppButton />}
     </div>
   )
 }

@@ -442,7 +442,7 @@ def handle_beauty_lead():
         return jsonify({"status": "error", "message": "Internal server error."}), 500
 
 
-# ─── Automotive Leads ─────────────────────────────────────────────────────────
+# ─── cleaning Leads ─────────────────────────────────────────────────────────
 @app.route('/api/cleaning-lead', methods=['POST'])
 def handle_Clean_lead():
     try:
@@ -488,6 +488,143 @@ def handle_Clean_lead():
 
     except Exception as e:
         print(f"Error processing cleaning lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+
+# ─── constructions Leads ─────────────────────────────────────────────────────────
+@app.route('/api/construction-lead', methods=['POST'])
+def handle_Construction_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'CompanyName': data.get('CompanyName', '').strip(),
+            'CompanyType': data.get('CompanyType', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('contruction.json', submission)
+
+        subject = f"🏢 New Construction Lead: {submission['CompanyName'] or submission['name']}"
+        body = f"""You have received a new lead from the Constructions Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Company Name: {submission['CompanyName']}
+        Company Type: {submission['CompanyType']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Services Offered: {submission['servicesOffered']}
+        Location / Area Served: {submission['location']}
+        Monthly Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking Construction Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing constructions lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+
+ # ─── dental Leads ─────────────────────────────────────────────────────────    
+@app.route('/api/dental-lead', methods=['POST'])
+def handle_dental_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'clinicName': data.get('clinicName', '').strip(),
+            'dentalServices': data.get('dentalServices', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            
+        }
+
+        save_submission('dental.json', submission)
+
+        subject = f"🦷 New Dental Lead: {submission['clinicName'] or submission['name']}"
+        body = f"""You have received a new lead from the dental Services Landing Page.
+
+        --- CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Clinic Name: {submission['clinicName']}
+        Dental Services: {submission['dentalServices']}
+        Message: {submission['message']}
+       """
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking dental Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing dental lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+    
+    # ─── agnecy Leads ─────────────────────────────────────────────────────────    
+@app.route('/api/agency-lead', methods=['POST'])
+def handle_agency_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'agencyName': data.get('agencyName', '').strip(),
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'monthlyAdBudget': data.get('monthlyAdBudget', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            
+        }
+
+        save_submission('agency.json', submission)
+
+        subject = f"🎨 New Agency Marketing Lead: {submission['agencyName'] or submission['name']}"
+        body = f"""You have received a new lead from the agency Marketing Services Landing Page.
+
+        --- CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Agency Name: {submission['agencyName']}
+        Services Offered: {submission['servicesOffered']}
+        monthly ad Budgets: {submission['monthlyAdBudget']}
+        Message: {submission['message']}
+       """
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking agency marketing Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing agency marketing lead: {str(e)}")
         return jsonify({"status": "error", "message": "Internal server error."}), 500
     
 
