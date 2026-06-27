@@ -67,14 +67,14 @@ export const Company = () => {
       title: "AI & Machine Learning",
       content: "Intelligent automation and predictive models for real competitive advantage.",
       icon2: <FaLongArrowAltRight />,
-      adress: "services/ai-development"
+      adress: "services/artificial-intelligence"
     },
     {
       icon: <SiHiveBlockchain />,
       title: "Blockchain",
       content: "Smart contracts, DeFi, and Web3 platforms for decentralized innovation.",
       icon2: <FaLongArrowAltRight />,
-      adress: "services/blockchain"
+      adress: "services/blockchain-app-development"
     },
     {
       icon: <IoGameControllerSharp />,
@@ -88,8 +88,8 @@ export const Company = () => {
       title: "E-commerce",
       content: "High-converting stores with seamless checkout flows and backend management.",
       icon2: <FaLongArrowAltRight />,
-      adress: "services/e-commerce"
-    },
+      adress: "services/ecommerce"
+    },  
     {
       icon: <HiOutlineDesktopComputer />,
       title: "Web Development",

@@ -13,7 +13,7 @@ export const Footer = () => {
       {/* Top */}
       <div className='flex gap-10 flex-col md:flex-row md:gap-10 justify-between w-full'>
         <div className='flex flex-col gap-4 w-full max-w-xs'>
-          <Logo dark={true} />
+         <Link to="/" ><Logo dark={true} /></Link>
           <p className='text-sm text-[#adb4b4] leading-relaxed'>
             Building world-class digital products since 2024. Pakistan's #1 software house.
           </p>
