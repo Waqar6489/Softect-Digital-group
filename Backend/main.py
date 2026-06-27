@@ -491,6 +491,288 @@ def handle_Clean_lead():
         return jsonify({"status": "error", "message": "Internal server error."}), 500
     
 
+# ─── e-commerce Leads ─────────────────────────────────────────────────────────
+@app.route('/api/ecommerce-lead', methods=['POST'])
+def handle_Ecommerce_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'businessName': data.get('businessName', '').strip(),
+            'website': data.get('webiste', '').strip(),
+            'productsCategory': data.get('productsCategory', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('ecommerce.json', submission)
+
+        subject = f"🧸 New ecommerce Lead: {submission['businessName'] or submission['name']}"
+        body = f"""You have received a new lead from the ecommerce Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Business Name: {submission['businessName']}
+        products Category: {submission['productsCategory']}
+        website: {submission['website']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking Ecommerce Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing ecommerce lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+    
+# ─── education Leads ─────────────────────────────────────────────────────────
+@app.route('/api/education-lead', methods=['POST'])
+def handle_Education_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'instituteName': data.get('instituteName', '').strip(),
+            'coursesOffered': data.get('coursesOffered', '').strip(),
+            'targetStudents': data.get('targetStudents', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('education.json', submission)
+
+        subject = f"🎓 New education Lead: {submission['instituteName'] or submission['name']}"
+        body = f"""You have received a new lead from the education Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Institute Name: {submission['instituteName']}
+        Courses Offered: {submission['coursesOffered']}
+       Target Students: {submission['targetStudents']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking education Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing education lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+
+# ─── finance Leads ─────────────────────────────────────────────────────────
+@app.route('/api/finance-lead', methods=['POST'])
+def handle_Finance_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'companyName': data.get('companyName', '').strip(),
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'targetClientType': data.get('targetClientType', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('finance.json', submission)
+
+        subject = f"🏛️ New finance Lead: {submission['companyName'] or submission['name']}"
+        body = f"""You have received a new lead from the finance Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Company Name: {submission['companyName']}
+        Services Offered: {submission['servicesOffered']}
+        Target Client Type: {submission['targetClientType']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking finance Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing finance lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+
+
+# ─── Fitness Leads ─────────────────────────────────────────────────────────
+@app.route('/api/fitness-lead', methods=['POST'])
+def handle_Fitness_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'gymStudioName': data.get('gymStudioName', '').strip(),
+            'servicesOffered': data.get('servicesOffered', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('fitness.json', submission)
+
+        subject = f"🥊 New fitness Lead: {submission['gymStudioName'] or submission['name']}"
+        body = f"""You have received a new lead from the fitness Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        GYM Studio Name: {submission['gymStudioName']}
+        Services Offered: {submission['servicesOffered']}
+        location: {submission['location']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking fitness Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing fitness lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+
+# ─── Healthcare Leads ─────────────────────────────────────────────────────────
+@app.route('/api/healthcare-lead', methods=['POST'])
+def handle_Healthcare_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'practiceHospitalName': data.get('practiceHospitalName', '').strip(),
+            'specialtyService': data.get('specialtyService', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('health.json', submission)
+
+        subject = f"🩺 New healthcare Lead: {submission['practiceHospitalName'] or submission['name']}"
+        body = f"""You have received a new lead from the healthcare Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Hospital Name: {submission['practiceHospitalName']}
+        Specialty Service: {submission['specialtyService']}
+        location: {submission['location']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking healthcare Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing healthcare lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+
+
+# ─── home-Improvement Leads ─────────────────────────────────────────────────────────
+@app.route('/api/home-improvement-lead', methods=['POST'])
+def handle_Home_Improve_lead():
+    try:
+        data = request.get_json(force=True)
+        
+        submission = {
+            'timestamp': datetime.utcnow().isoformat(),
+            'name': data.get('name', '').strip(),
+            'email': data.get('email', '').strip(),
+            'phone': data.get('phone', '').strip(),
+            'message': data.get('message', '').strip() or 'N/A',
+            'businessName': data.get('businessName', '').strip(),
+            'serviceInterestedIn': data.get('serviceInterestedIn', '').strip(),
+            'location': data.get('location', '').strip(),
+            'budget': data.get('budget', '').strip()
+        }
+
+        save_submission('homeImprovement.json', submission)
+
+        subject = f"🔨 New home-improvement Lead: {submission['businessName'] or submission['name']}"
+        body = f"""You have received a new lead from the home-improvement Services Landing Page.
+
+        --- STEP 1: CONTACT DETAILS ---
+        Name: {submission['name']}
+        Email: {submission['email']}
+        Phone: {submission['phone']}
+        Message: {submission['message']}
+
+        --- STEP 2: BUSINESS DETAILS ---
+        Business Name: {submission['businessName']}
+        Service InterestedIn: {submission['serviceInterestedIn']}
+        location: {submission['location']}
+        Ad Budget: {submission['budget']}"""
+
+        try:
+            _send_notification_email(subject=subject, body=body)
+        except Exception as email_err:
+            print(f"Non-blocking home-improvement Email Error: {email_err}")
+
+        return jsonify({"status": "success", "message": "Lead saved and processed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error processing home-improvement lead: {str(e)}")
+        return jsonify({"status": "error", "message": "Internal server error."}), 500
+    
+
 # ─── constructions Leads ─────────────────────────────────────────────────────────
 @app.route('/api/construction-lead', methods=['POST'])
 def handle_Construction_lead():

@@ -38,6 +38,12 @@ import CleaningServices from './Components/Pages/External_Services/CleaningServi
 import ConstructionLandingPage from './Components/Pages/External_Services/ConstructionServices'
 import DentalLandingPage from './Components/Pages/External_Services/DentalServices'
 import DigitalMarketingLandingPage from './Components/Pages/External_Services/DigitalMarketingServices'
+import EcommerceLandingPage from './Components/Pages/External_Services/EcommerceServices'
+import EducationLandingPage from './Components/Pages/External_Services/EducationServices'
+import FinanceLandingPage from './Components/Pages/External_Services/FinanceServices'
+import FitnessLandingPage from './Components/Pages/External_Services/FitnesServices'
+import HealthcareLandingPage from './Components/Pages/External_Services/HealthcareServices'
+import HomeImprovementLandingPage from './Components/Pages/External_Services/HomeImprovementServices'
 
 const WhatsAppButton = () => (
   <a
@@ -79,19 +85,25 @@ const WhatsAppButton = () => (
 function App() {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/blog-admin';
-  const Automotive = pathname === '/services/automotive-services';
-  const Beauty = pathname === '/services/beauty-solon-services';
-  const Clean = pathname === '/services/cleaning-services';
-  const Construct = pathname === '/services/construction-services';
-  const Dental = pathname === '/services/dental-services';
-  const Marketing = pathname === '/services/digital-marketing-services';
+  const Automotive = pathname === '/automotive-services';
+  const Beauty = pathname === '/beauty-solon-services';
+  const Clean = pathname === '/cleaning-services';
+  const Construct = pathname === '/construction-services';
+  const Dental = pathname === '/dental-services';
+  const Marketing = pathname === '/digital-marketing-services';
+  const Ecommerce = pathname === '/ecommerce-services';
+  const Education = pathname === '/education-services';
+  const finance = pathname === '/finance-services';
+  const fitness = pathname === '/fitness-services';
+  const healthcare = pathname === '/healthcare-services';
+  const home_Imp = pathname === '/home-improvement-services';
 
  
 
   return (
     <div className="App">
       <ScrollToTop />
-      {!(isAdmin || Automotive || Beauty || Clean  || Construct || Dental || Marketing ) && <Header />}
+      {!(isAdmin || Automotive || Beauty || Clean  || Construct || Dental || Marketing  || Ecommerce || Education || finance || fitness || home_Imp || healthcare) && <Header />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/services" element={<Services />} />
@@ -105,12 +117,18 @@ function App() {
         <Route path="/services/crossplatform-app-development" element={<CrossPlatformAppDevelopment />} />
         <Route path="/services/emerging-app-development" element={<EmergingAppDevelopment />} />
         <Route path="/services/artificial-intelligence" element={<ArtificialIntelligence />} />
-        <Route path="/services/automotive-services" element={<AutomotiveServices />} />
-        <Route path="/services/beauty-solon-services" element={<BeautySalonServices />} />
-        <Route path="/services/cleaning-services" element={<CleaningServices />} />
-        <Route path="/services/construction-services" element={<ConstructionLandingPage />} />
-        <Route path="/services/dental-services" element={<DentalLandingPage />} />
-        <Route path="/services/digital-marketing-services" element={<DigitalMarketingLandingPage />} />
+        <Route path="/automotive-services" element={<AutomotiveServices />} />
+        <Route path="/beauty-solon-services" element={<BeautySalonServices />} />
+        <Route path="/cleaning-services" element={<CleaningServices />} />
+        <Route path="/construction-services" element={<ConstructionLandingPage />} />
+        <Route path="/dental-services" element={<DentalLandingPage />} />
+        <Route path="/digital-marketing-services" element={<DigitalMarketingLandingPage />} />
+        <Route path="/ecommerce-services" element={<EcommerceLandingPage />} />
+        <Route path="/education-services" element={<EducationLandingPage />} />
+        <Route path="/finance-services" element={<FinanceLandingPage />} />
+        <Route path="/fitness-services" element={<FitnessLandingPage />} />
+        <Route path="/healthcare-services" element={<HealthcareLandingPage />} />
+        <Route path="/home-improvement-services" element={<HomeImprovementLandingPage />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/solutions/xdrm" element={<XDRM />} />
         <Route path="/solutions/hrm" element={<HRM />} />
@@ -129,8 +147,8 @@ function App() {
         <Route path="/blog-admin" element={<BlogAdmin />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing) && <Footer />}
-      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing) && <WhatsAppButton />}
+      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing || Ecommerce || Education || finance || fitness || home_Imp || healthcare) && <Footer />}
+      {!(isAdmin || Automotive || Beauty || Clean || Construct || Dental || Marketing || Ecommerce || Education || finance || fitness || home_Imp || healthcare) && <WhatsAppButton />}
     </div>
   )
 }
